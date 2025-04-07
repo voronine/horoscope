@@ -1,95 +1,61 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+'use client';
+import { useEffect, useState } from 'react';
+import { initializeHoroscopeData } from '../store/horoscopeSlice';
+import { useGetCatFactQuery } from '../store/catFactsApi';
+import ZodiacSelector from '../components/ZodiacSelector';
+import ZodiacLogo from '../components/ZodiacLogo';
+import DaysPeriodToggle from '../components/DaysPeriodToggle';
+import DaysTabs from '../components/DaysTabs';
+import DayCard from '../components/DayCard';
+import ThemeToggle from '../components/ThemeToggle';
+import styles from './page.module.css';
+import { RootState } from '@/store/store';
+import { useAppDispatch, useAppSelector } from '@/store/hooks/hooks';
 
-export default function Home() {
+export default function HomePage() {
+  const dispatch = useAppDispatch();
+  const horoscopeData = useAppSelector((state: RootState) => state.horoscope.data);
+  const status = useAppSelector((state: RootState) => state.horoscope.status);
+  const [sign, setSign] = useState('Aries');
+  const [days, setDays] = useState(3);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  useEffect(() => {
+    if (status === 'idle') {
+      dispatch(initializeHoroscopeData());
+    }
+  }, [status, dispatch]);
+
+  const dayData = horoscopeData ? horoscopeData.data[sign].slice(0, days) : [];
+  const currentDay = dayData[selectedIndex] || null;
+
+  const { data: catFact, isLoading: isCatLoading } = useGetCatFactQuery(
+    currentDay?.catFactParam,
+    { skip: !currentDay || !!currentDay.catFact }
+  );
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
+    <main className={styles.wrapper}>
+      <header className={styles.header}>
+        <ZodiacLogo sign={sign} />
+        <ThemeToggle />
+      </header>
+      <section className={styles.controls}>
+        <ZodiacSelector onSelect={setSign} />
+        <DaysPeriodToggle onToggle={setDays} />
+      </section>
+      <DaysTabs 
+        days={days} 
+        onSelect={setSelectedIndex} 
+        selectedIndex={selectedIndex} />
+      {currentDay && (
+        <DayCard
+          sign={sign}
+          score={currentDay.score}
+          catFact={currentDay.catFact || (isCatLoading ? 'Loading...' : catFact || '')}
+          dateStr={currentDay.date}
         />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      )}
+    </main>
   );
 }
