@@ -1,19 +1,5 @@
+import { zodiacSigns } from '@/utils/horoscope';
 import { useState } from 'react';
-
-export const zodiacSigns = [
-  'Aries',
-  'Taurus',
-  'Gemini',
-  'Cancer',
-  'Leo',
-  'Virgo',
-  'Libra',
-  'Scorpio',
-  'Sagittarius',
-  'Capricorn',
-  'Aquarius',
-  'Pisces'
-];
 
 export default function ZodiacSelector({ onSelect }: { onSelect: (sign: string) => void }) {
   const [selectedSign, setSelectedSign] = useState(zodiacSigns[0]);

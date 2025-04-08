@@ -1,16 +1,16 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { initializeHoroscopeData } from '../store/horoscopeSlice';
-import { useGetCatFactQuery } from '../store/catFactsApi';
-import ZodiacSelector from '../components/ZodiacSelector';
-import ZodiacLogo from '../components/ZodiacLogo';
-import DaysPeriodToggle from '../components/DaysPeriodToggle';
-import DaysTabs from '../components/DaysTabs';
-import DayCard from '../components/DayCard';
-import ThemeToggle from '../components/ThemeToggle';
+import ZodiacSelector from '@/components/ZodiacSelector';
+import ZodiacLogo from '@/components/ZodiacLogo';
+import DaysPeriodToggle from '@/components/DaysPeriodToggle';
+import DaysTabs from '@/components/DaysTabs';
+import DayCard from '@/components/DayCard';
+import ThemeToggle from '@/components/ThemeToggle';
 import styles from './page.module.css';
 import { RootState } from '@/store/store';
 import { useAppDispatch, useAppSelector } from '@/store/hooks/hooks';
+import { useGetCatFactQuery } from '@/store/slices/catFactsApi';
+import { initializeHoroscopeData } from '@/store/slices/horoscopeSlice';
 
 export default function HomePage() {
   const dispatch = useAppDispatch();

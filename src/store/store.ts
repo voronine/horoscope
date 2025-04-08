@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
-import horoscopeReducer from './horoscopeSlice';
-import { catFactsApi } from './catFactsApi';
+import horoscopeReducer from './slices/horoscopeSlice';
+import { catFactsApi } from './slices/catFactsApi';
 
 export const store = configureStore({
   reducer: {

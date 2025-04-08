@@ -22,7 +22,7 @@ export function generateRandomNumber(): number {
   return Math.floor(Math.random() * 101);
 }
 
-const zodiacSigns = [
+export const zodiacSigns = [
   'Aries',
   'Taurus',
   'Gemini',
