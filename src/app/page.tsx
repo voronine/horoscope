@@ -3,14 +3,13 @@ import { useEffect, useState } from 'react';
 import ZodiacSelector from '@/components/ZodiacSelector';
 import ZodiacLogo from '@/components/ZodiacLogo';
 import DaysPeriodToggle from '@/components/DaysPeriodToggle';
-import DaysTabs from '@/components/DaysTabs';
-import DayCard from '@/components/DayCard';
 import ThemeToggle from '@/components/ThemeToggle';
 import styles from './page.module.css';
 import { RootState } from '@/store/store';
 import { useAppDispatch, useAppSelector } from '@/store/hooks/hooks';
 import { useGetCatFactQuery } from '@/store/slices/catFactsApi';
 import { initializeHoroscopeData } from '@/store/slices/horoscopeSlice';
+import DayTabsContent from '@/components/DayTabsContent';
 
 export default function HomePage() {
   const dispatch = useAppDispatch();
@@ -44,18 +43,15 @@ export default function HomePage() {
         <ZodiacSelector onSelect={setSign} />
         <DaysPeriodToggle onToggle={setDays} />
       </section>
-      <DaysTabs 
-        days={days} 
-        onSelect={setSelectedIndex} 
-        selectedIndex={selectedIndex} />
-      {currentDay && (
-        <DayCard
-          sign={sign}
-          score={currentDay.score}
-          catFact={currentDay.catFact || (isCatLoading ? 'Loading...' : catFact || '')}
-          dateStr={currentDay.date}
-        />
-      )}
+      <DayTabsContent
+        days={days}
+        selectedIndex={selectedIndex}
+        onTabSelect={setSelectedIndex}
+        currentDay={currentDay}
+        sign={sign}
+        isLoading={isCatLoading}
+        catFact={catFact || ''}
+      />
     </main>
   );
 }
