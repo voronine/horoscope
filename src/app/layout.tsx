@@ -1,5 +1,6 @@
 import { ProviderWrapper } from "@/components/ProviderWrapper";
 import React from "react";
+import './globals.css'
 
 export default function RootLayout({
   children
@@ -8,7 +9,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
+      <body className="wrapper">
         <ProviderWrapper>{children}</ProviderWrapper>
       </body>
     </html>

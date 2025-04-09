@@ -1,6 +1,5 @@
 .zodiacLogo {
     max-width: 100px;
-    transition: opacity 0.3s ease-in-out;
   }
   
   @media (max-width: 500px) {
