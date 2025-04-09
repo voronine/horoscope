@@ -4,6 +4,7 @@
   border-radius: 4px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 15px;
+  width: 80vw;
 }
 
 .merged {
@@ -88,27 +89,41 @@
   .active {
     padding: 14px 5px 6px 5px;
     font-size: 11px;
-    flex: 0 0 50px;
+    flex: 0 0 80px;
   }
 
   .tab {
     padding: 6px 5px;
     font-size: 11px;
-    flex: 0 0 50px;
+    flex: 0 0 80px;
+  }
+}
+
+@media (max-width: 660px) {
+  .active {
+    padding: 14px 5px 6px 5px;
+    font-size: 10px;
+    flex: 0 0 60px;
+  }
+
+  .tab {
+    padding: 6px 5px;
+    font-size: 10px;
+    flex: 0 0 60px;
   }
 }
 
 @media (max-width: 470px) {
   .active {
-    padding: 14px 5px 6px 5px;
-    font-size: 8px;
-    flex: 0 0 30px;
+    padding: 14px 1px 6px 5px;
+    font-size: 6px;
+    flex: 0 0 40px;
   }
 
   .tab {
-    padding: 6px 5px;
-    font-size: 8px;
-    flex: 0 0 30px;
+    padding: 6px 1px;
+    font-size: 6px;
+    flex: 0 0 40px;
   }
 }
 

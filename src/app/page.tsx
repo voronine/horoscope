@@ -37,10 +37,12 @@ export default function HomePage() {
     <main className={styles.wrapper}>
       <header className={styles.header}>
         <ZodiacLogo sign={sign} />
-        <ThemeToggle />
+        <div className={styles.selectorToggle}>
+          <ZodiacSelector onSelect={setSign} />
+          <ThemeToggle />
+        </div>
       </header>
       <section className={styles.controls}>
-        <ZodiacSelector onSelect={setSign} />
         <DaysPeriodToggle onToggle={setDays} />
       </section>
       <DayTabsContent

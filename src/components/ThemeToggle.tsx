@@ -1,4 +1,6 @@
+'use client';
 import { useState, useEffect } from 'react';
+import styles from './ThemeToggle.module.css'
 
 export default function ThemeToggle() {
   const [theme, setTheme] = useState('light');
@@ -12,8 +14,20 @@ export default function ThemeToggle() {
   };
 
   return (
-    <button onClick={toggleTheme}>
-      {theme === 'light' ? 'Dark Mode' : 'Light Mode'}
+    <button onClick={toggleTheme} aria-label="Toggle Theme" className={styles.button}>
+      {theme === 'light' ? (
+        <img
+          src="https://img.icons8.com/ios-filled/50/ffffff/moon-symbol.png"
+          alt="Switch to Dark Mode"
+          style={{ width: '24px', height: '24px' }}
+        />
+      ) : (
+        <img
+          src="https://img.icons8.com/ios-filled/50/FFD700/sun.png"
+          alt="Switch to Light Mode"
+          style={{ width: '24px', height: '24px' }}
+        />
+      )}
     </button>
   );
 }

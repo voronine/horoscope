@@ -91,9 +91,9 @@ export default function DayTabsContent({
             <div>{daysData[selectedIndex].date}</div>
           </div>
           <div className={styles.scores}>
-            <div>Relationship: {daysData[selectedIndex].score.relationship}</div>
-            <div>Career: {daysData[selectedIndex].score.career}</div>
-            <div>Health: {daysData[selectedIndex].score.health}</div>
+            <div><Triangle size={12} /> Relationship: {daysData[selectedIndex].score.relationship}</div>
+            <div><Diamond size={12} /> Career: {daysData[selectedIndex].score.career}</div>
+            <div><Heart size={12} /> Health: {daysData[selectedIndex].score.health}</div>
           </div>
           <div className={styles.fact}>
             {daysData[selectedIndex].catFact || (isLoading ? 'Loading...' : catFact || '')}
