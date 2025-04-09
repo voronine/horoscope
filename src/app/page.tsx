@@ -10,10 +10,13 @@ import { useAppDispatch, useAppSelector } from '@/store/hooks/hooks'
 import { initializeHoroscopeData } from '@/store/slices/horoscopeSlice'
 import { useGetAllCatFactsQuery } from '@/store/slices/apiSlice'
 import DayTabsContent from '@/components/DayTabsContent'
+import { getUniqueCatFactScores } from '@/utils/horoscope'
 
 export default function HomePage() {
   const dispatch = useAppDispatch()
-  const horoscopeData = useAppSelector((state: RootState) => state.horoscope.data)
+  const horoscopeData = useAppSelector(
+    (state: RootState) => state.horoscope.data
+  )
   const status = useAppSelector((state: RootState) => state.horoscope.status)
   const [sign, setSign] = useState('Aries')
   const [days, setDays] = useState(3)
@@ -26,27 +29,30 @@ export default function HomePage() {
   }, [status, dispatch])
 
   const dayData = useMemo(() => {
-    return horoscopeData ? horoscopeData.data[sign].slice(0, days) : []
+    return horoscopeData 
+      ? horoscopeData.data[sign].slice(0, days) 
+      : []
   }, [horoscopeData, sign, days])
 
   const currentDay = useMemo(() => {
     return dayData[selectedIndex] || null
   }, [dayData, selectedIndex])
 
-  const uniqueScores = useMemo(() => {
-    if (!horoscopeData) return []
-    const scores = new Set<number>()
-    Object.values(horoscopeData.data).forEach((daysArray) => {
-      daysArray.forEach((day) => {
-        scores.add(day.catFactParam)
-      })
-    })
-    return Array.from(scores)
-  }, [horoscopeData])
+  const uniqueScores = useMemo(
+    () => getUniqueCatFactScores(horoscopeData),
+    [horoscopeData]
+  )
 
-  const { data: catFactsMapping, isLoading: isCatLoading } = useGetAllCatFactsQuery(uniqueScores, { skip: uniqueScores.length === 0 })
+  const {
+    data: catFactsMapping,
+    isLoading: isCatLoading
+  } = useGetAllCatFactsQuery(uniqueScores, {
+    skip: uniqueScores.length === 0,
+  })
 
-  const currentCatFact = currentDay ? catFactsMapping?.[currentDay.catFactParam] || '' : ''
+  const currentCatFact = currentDay
+    ? catFactsMapping?.[currentDay.catFactParam] || ''
+    : ''
 
   return (
     <main className={styles.wrapper}>

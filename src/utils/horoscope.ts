@@ -65,3 +65,14 @@ export function generateHoroscopeData(): HoroscopeData {
 
   return { startDate, data };
 }
+
+export function getUniqueCatFactScores(horoscopeData: HoroscopeData | null): number[] {
+  if (!horoscopeData) return []
+  const scores = new Set<number>()
+  Object.values(horoscopeData.data).forEach(daysArray => {
+    daysArray.forEach(day => {
+      scores.add(day.catFactParam)
+    })
+  })
+  return Array.from(scores)
+}

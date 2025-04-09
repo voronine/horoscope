@@ -1,32 +1,32 @@
-import { format, addDays } from 'date-fns';
-import { uk } from 'date-fns/locale';
-import MoodImage from './MoodImage';
-import CopyLinkButton from './CopyLinkButton';
-import styles from './DaysTabs.module.css';
-import { Heart } from 'lucide-react';
-import { Diamond } from 'lucide-react';
-import { Triangle } from 'lucide-react';
-import { useMemo, useCallback } from 'react';
+import { format, addDays } from 'date-fns'
+import { uk } from 'date-fns/locale'
+import MoodImage from './MoodImage'
+import CopyLinkButton from './CopyLinkButton'
+import styles from './DaysTabs.module.css'
+import { Heart } from 'lucide-react'
+import { Diamond } from 'lucide-react'
+import { Triangle } from 'lucide-react'
+import { useMemo, useCallback } from 'react'
 
 type DayData = {
   score: {
-    health: number;
-    relationship: number;
-    career: number;
-  };
-  catFact?: string;
-  date: string;
-};
+    health: number
+    relationship: number
+    career: number
+  }
+  catFact?: string
+  date: string
+}
 
 type Props = {
-  days: number;
-  selectedIndex: number;
-  onTabSelect: (index: number) => void;
-  daysData: DayData[];
-  sign: string;
-  isLoading: boolean;
-  catFact: string;
-};
+  days: number
+  selectedIndex: number
+  onTabSelect: (index: number) => void
+  daysData: DayData[]
+  sign: string
+  isLoading: boolean
+  catFact: string
+}
 
 export default function DayTabsContent({
   days,
@@ -39,25 +39,38 @@ export default function DayTabsContent({
 }: Props) {
   const tabLabels = useMemo(() => {
     return Array.from({ length: days }, (_, i) => {
-      const d = addDays(new Date(), i);
-      return (format as any)(d, 'EEEE dd MMMM', { locale: uk });
-    });
-  }, [days]);
+      const d = addDays(new Date(), i)
+      return (format as any)(d, 'EEEE dd MMMM', { locale: uk })
+    })
+  }, [days])
 
   const formatLabel = useCallback((label: string) => {
-    const parts = label.split(' ');
-    const dayOfWeek = parts[0];
-    const dayOfWeekCapitalized =
-      dayOfWeek.charAt(0).toUpperCase() + dayOfWeek.slice(1);
-    const dayAndMonth = parts.slice(1).join(' ');
+    const parts = label.split(' ')
+    const dayOfWeek = parts[0]
+    const dayOfWeekCapitalized = dayOfWeek.charAt(0).toUpperCase() + dayOfWeek.slice(1)
+    const dayAndMonth = parts.slice(1).join(' ')
     return (
       <>
         {dayOfWeekCapitalized}
         <br />
         {dayAndMonth}
       </>
-    );
-  }, []);
+    )
+  }, [])
+
+  const bestIndicator = useMemo(() => {
+    if (!daysData[selectedIndex]) return ''
+    const scores = daysData[selectedIndex].score
+    let bestKey = ''
+    let bestValue = -Infinity
+    Object.entries(scores).forEach(([key, value]) => {
+      if (value > bestValue) {
+        bestValue = value
+        bestKey = key
+      }
+    })
+    return bestKey
+  }, [daysData, selectedIndex])
 
   return (
     <div>
@@ -68,9 +81,7 @@ export default function DayTabsContent({
             onClick={() => onTabSelect(i)}
             className={i === selectedIndex ? styles.active : styles.tab}
           >
-            <div className={styles.spanDay}>
-              {formatLabel(label)}
-            </div>
+            <div className={styles.spanDay}>{formatLabel(label)}</div>
             <div className={styles.block}>
               <div className={styles.tabValue}>
                 <Triangle size={12} />
@@ -91,7 +102,7 @@ export default function DayTabsContent({
       {daysData[selectedIndex] && (
         <div className={`${styles.card} ${styles.merged}`}>
           <div className={styles.header}>
-            <MoodImage sign={sign} />
+            <MoodImage indicator={bestIndicator} />
             <div>{daysData[selectedIndex].date}</div>
           </div>
           <div className={styles.scores}>
@@ -116,5 +127,5 @@ export default function DayTabsContent({
         </div>
       )}
     </div>
-  );
+  )
 }
