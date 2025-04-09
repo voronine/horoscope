@@ -33,7 +33,6 @@ export default function DayTabsContent({
   selectedIndex,
   onTabSelect,
   daysData,
-  sign,
   isLoading,
   catFact
 }: Props) {
@@ -101,22 +100,23 @@ export default function DayTabsContent({
       </div>
       {daysData[selectedIndex] && (
         <div className={`${styles.card} ${styles.merged}`}>
-          <div className={styles.header}>
-            <MoodImage indicator={bestIndicator} />
-            <div>{daysData[selectedIndex].date}</div>
-          </div>
-          <div className={styles.scores}>
-            <div>
-              <Triangle size={12} /> Relationship:{' '}
-              {daysData[selectedIndex].score.relationship}
+          <div className={styles.mainBlock}>
+            <div className={styles.header}>
+              <MoodImage indicator={bestIndicator} />
             </div>
-            <div>
-              <Diamond size={12} /> Career:{' '}
-              {daysData[selectedIndex].score.career}
-            </div>
-            <div>
-              <Heart size={12} /> Health:{' '}
-              {daysData[selectedIndex].score.health}
+            <div className={styles.scores}>
+              <div>
+                <Triangle size={12} /> Relationship:{' '}
+                {daysData[selectedIndex].score.relationship}
+              </div>
+              <div>
+                <Diamond size={12} /> Career:{' '}
+                {daysData[selectedIndex].score.career}
+              </div>
+              <div>
+                <Heart size={12} /> Health:{' '}
+                {daysData[selectedIndex].score.health}
+              </div>
             </div>
           </div>
           <div className={styles.fact}>

@@ -14,6 +14,8 @@
   box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
   z-index: 2;
   position: relative;
+  display: flex;
+  flex-direction: column;
 }
 
 .tabs {
@@ -68,6 +70,24 @@
 .tabValue {
   display: flex;
   gap: 4px;
+}
+
+.mainBlock {
+  display: flex;
+  gap: 50px;
+  margin-bottom: 30px;
+}
+
+.scores {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.fact {
+  font-style: italic;
+  margin-bottom: 30px;
+  height: 70px;
 }
 
 @media (max-width: 1024px) {

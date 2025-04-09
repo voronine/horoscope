@@ -6,8 +6,8 @@ type MoodImageProps = {
 }
 
 export default function MoodImage({ indicator }: MoodImageProps) {
-  if (indicator === 'relationship') return <Triangle size={32} />
-  if (indicator === 'career') return <Diamond size={32} />
-  if (indicator === 'health') return <Heart size={32} />
+  if (indicator === 'relationship') return <Triangle size={95} />
+  if (indicator === 'career') return <Diamond size={95} />
+  if (indicator === 'health') return <Heart size={95} />
   return null
 }
