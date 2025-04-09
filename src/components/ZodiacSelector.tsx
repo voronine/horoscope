@@ -4,7 +4,7 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
-import styles from './ZodiacSelector.module.css'
+import styles from './ZodiacSelector.module.css';
 
 type ZodiacSelectorProps = {
   onSelect: (sign: string) => void;
@@ -23,7 +23,19 @@ export default function ZodiacSelector({ onSelect }: ZodiacSelectorProps) {
     <div className={styles.select}>
       <FormControl
         variant="outlined"
-        sx={{ width: 200 }} 
+        sx={{
+          width: 200,
+          '@media (max-width:500px)': {
+            width: 150,
+            '& .MuiInputBase-input': {
+              fontSize: '0.8rem',
+              padding: '4px',
+            },
+            '& .MuiInputLabel-root': {
+              fontSize: '0.8rem',
+            },
+          },
+        }}
       >
         <InputLabel id="zodiac-selector-label">Horoscope</InputLabel>
         <Select

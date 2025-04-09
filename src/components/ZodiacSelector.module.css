@@ -2,3 +2,11 @@
     width: 120px;
     margin-right: 80px;
 }
+
+@media (max-width: 500px) {
+    .select {
+        width: 80px;
+        margin-right: 50px;
+    }
+  }
+  
