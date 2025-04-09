@@ -5,6 +5,7 @@
   --card-border: #cccccc;
   --zodiac-logo-filter: none;
   --card-hover-bg: #f0f0f0;
+  --button-bg: #d3d3d3;
 }
 
 [data-theme="dark"] {
@@ -13,6 +14,7 @@
   --card-bg: #2a2a2a;
   --card-border: #444444;
   --card-hover-bg: #333333;
+  --button-bg: #959595;
 }
 
 .wrapper {

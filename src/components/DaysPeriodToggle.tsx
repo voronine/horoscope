@@ -19,10 +19,11 @@ export default function DaysPeriodToggle({ onToggle }: DaysPeriodToggleProps) {
       variant="contained"
       onClick={toggleDays}
       sx={{
-        backgroundColor: 'gray',
-        height: 25,
+        backgroundColor: 'var(--button-bg)',
+        color: 'var(--text-color)',
+        height: 20,
         '&:hover': {
-          backgroundColor: 'darkgray'
+          backgroundColor: 'var(--button-bg)',
         }
       }}
     >

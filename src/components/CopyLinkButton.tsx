@@ -10,12 +10,14 @@ export default function CopyLinkButton() {
       variant="contained"
       onClick={copyLink}
       sx={{
-        backgroundColor: 'grey',
+        backgroundColor: 'var(--button-bg)',
+        color: 'var(--text-color)',
         width: 120,
         fontSize: 11,
-        height:25,
+        height: 25,
         '&:hover': {
-          backgroundColor: 'darkgrey'
+          backgroundColor: 'var(--button-bg)',
+          filter: 'brightness(0.9)'
         }
       }}
     >
