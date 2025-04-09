@@ -1,5 +1,6 @@
 'use client'
 import { useEffect, useState, useMemo } from 'react'
+import { useRouter } from 'next/navigation'
 import ZodiacSelector from '@/components/ZodiacSelector'
 import ZodiacLogo from '@/components/ZodiacLogo'
 import DaysPeriodToggle from '@/components/DaysPeriodToggle'
@@ -12,13 +13,17 @@ import { useGetAllCatFactsQuery } from '@/store/slices/apiSlice'
 import DayTabsContent from '@/components/DayTabsContent'
 import { getUniqueCatFactScores } from '@/utils/horoscope'
 
-export default function HomePage() {
+type HomePageProps = {
+  initialSign?: string,
+  initialDate?: string
+}
+
+export default function HomePage({ initialSign, initialDate }: HomePageProps) {
   const dispatch = useAppDispatch()
-  const horoscopeData = useAppSelector(
-    (state: RootState) => state.horoscope.data
-  )
+  const router = useRouter()
+  const horoscopeData = useAppSelector((state: RootState) => state.horoscope.data)
   const status = useAppSelector((state: RootState) => state.horoscope.status)
-  const [sign, setSign] = useState('Aries')
+  const [sign, setSign] = useState(initialSign ?? 'Aries')
   const [days, setDays] = useState(3)
   const [selectedIndex, setSelectedIndex] = useState(0)
 
@@ -29,30 +34,34 @@ export default function HomePage() {
   }, [status, dispatch])
 
   const dayData = useMemo(() => {
-    return horoscopeData 
-      ? horoscopeData.data[sign].slice(0, days) 
-      : []
+    return horoscopeData ? horoscopeData.data[sign].slice(0, days) : []
   }, [horoscopeData, sign, days])
+
+  useEffect(() => {
+    if (initialDate && dayData.length > 0) {
+      const idx = dayData.findIndex(day => day.date === initialDate)
+      if (idx !== -1) {
+        setSelectedIndex(idx)
+      }
+    }
+  }, [initialDate, dayData])
 
   const currentDay = useMemo(() => {
     return dayData[selectedIndex] || null
   }, [dayData, selectedIndex])
 
-  const uniqueScores = useMemo(
-    () => getUniqueCatFactScores(horoscopeData),
-    [horoscopeData]
-  )
+  const uniqueScores = useMemo(() => getUniqueCatFactScores(horoscopeData), [horoscopeData])
 
-  const {
-    data: catFactsMapping,
-    isLoading: isCatLoading
-  } = useGetAllCatFactsQuery(uniqueScores, {
-    skip: uniqueScores.length === 0,
-  })
+  const { data: catFactsMapping, isLoading: isCatLoading } =
+    useGetAllCatFactsQuery(uniqueScores, { skip: uniqueScores.length === 0 })
 
-  const currentCatFact = currentDay
-    ? catFactsMapping?.[currentDay.catFactParam] || ''
-    : ''
+  const currentCatFact = currentDay ? catFactsMapping?.[currentDay.catFactParam] || '' : ''
+
+  useEffect(() => {
+    if (currentDay) {
+      router.push(`/horoscope/${sign}/${currentDay.date}`)
+    }
+  }, [sign, currentDay, router])
 
   return (
     <main className={styles.wrapper}>
