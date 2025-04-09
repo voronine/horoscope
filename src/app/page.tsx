@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import ZodiacSelector from '@/components/ZodiacSelector';
 import ZodiacLogo from '@/components/ZodiacLogo';
 import DaysPeriodToggle from '@/components/DaysPeriodToggle';
@@ -13,8 +13,12 @@ import DayTabsContent from '@/components/DayTabsContent';
 
 export default function HomePage() {
   const dispatch = useAppDispatch();
-  const horoscopeData = useAppSelector((state: RootState) => state.horoscope.data);
-  const status = useAppSelector((state: RootState) => state.horoscope.status);
+  const horoscopeData = useAppSelector(
+    (state: RootState) => state.horoscope.data
+  );
+  const status = useAppSelector(
+    (state: RootState) => state.horoscope.status
+  );
   const [sign, setSign] = useState('Aries');
   const [days, setDays] = useState(3);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -25,13 +29,18 @@ export default function HomePage() {
     }
   }, [status, dispatch]);
 
-  const dayData = horoscopeData ? horoscopeData.data[sign].slice(0, days) : [];
-  const currentDay = dayData[selectedIndex] || null;
+  const dayData = useMemo(() => {
+    return horoscopeData ? horoscopeData.data[sign].slice(0, days) : [];
+  }, [horoscopeData, sign, days]);
 
-  const { data: catFact, isLoading: isCatLoading } = useGetCatFactQuery(
-    currentDay?.catFactParam,
-    { skip: !currentDay || !!currentDay.catFact }
-  );
+  const currentDay = useMemo(() => {
+    return dayData[selectedIndex] || null;
+  }, [dayData, selectedIndex]);
+
+  const { data: catFact, isLoading: isCatLoading } =
+    useGetCatFactQuery(currentDay?.catFactParam, {
+      skip: !currentDay || !!currentDay.catFact
+    });
 
   return (
     <main className={styles.wrapper}>

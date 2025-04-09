@@ -1,31 +1,32 @@
-import { format, addDays } from 'date-fns'
-import { uk } from 'date-fns/locale'
-import MoodImage from './MoodImage'
-import CopyLinkButton from './CopyLinkButton'
-import styles from './DaysTabs.module.css'
-import { Heart } from 'lucide-react'
-import { Diamond } from 'lucide-react'
-import { Triangle } from 'lucide-react'
+import { format, addDays } from 'date-fns';
+import { uk } from 'date-fns/locale';
+import MoodImage from './MoodImage';
+import CopyLinkButton from './CopyLinkButton';
+import styles from './DaysTabs.module.css';
+import { Heart } from 'lucide-react';
+import { Diamond } from 'lucide-react';
+import { Triangle } from 'lucide-react';
+import { useMemo, useCallback } from 'react';
 
 type DayData = {
   score: {
-    health: number
-    relationship: number
-    career: number
-  }
-  catFact?: string
-  date: string
-}
+    health: number;
+    relationship: number;
+    career: number;
+  };
+  catFact?: string;
+  date: string;
+};
 
 type Props = {
-  days: number
-  selectedIndex: number
-  onTabSelect: (index: number) => void
-  daysData: DayData[]
-  sign: string
-  isLoading: boolean
-  catFact: string
-}
+  days: number;
+  selectedIndex: number;
+  onTabSelect: (index: number) => void;
+  daysData: DayData[];
+  sign: string;
+  isLoading: boolean;
+  catFact: string;
+};
 
 export default function DayTabsContent({
   days,
@@ -36,24 +37,27 @@ export default function DayTabsContent({
   isLoading,
   catFact
 }: Props) {
-  const tabLabels = Array.from({ length: days }, (_, i) => {
-    const d = addDays(new Date(), i)
-    return (format as any)(d, 'EEEE dd MMMM', { locale: uk })
-  })
+  const tabLabels = useMemo(() => {
+    return Array.from({ length: days }, (_, i) => {
+      const d = addDays(new Date(), i);
+      return (format as any)(d, 'EEEE dd MMMM', { locale: uk });
+    });
+  }, [days]);
 
-  const formatLabel = (label: string) => {
-    const parts = label.split(' ')
-    const dayOfWeek = parts[0]
-    const dayOfWeekCapitalized = dayOfWeek.charAt(0).toUpperCase() + dayOfWeek.slice(1)
-    const dayAndMonth = parts.slice(1).join(' ')
+  const formatLabel = useCallback((label: string) => {
+    const parts = label.split(' ');
+    const dayOfWeek = parts[0];
+    const dayOfWeekCapitalized =
+      dayOfWeek.charAt(0).toUpperCase() + dayOfWeek.slice(1);
+    const dayAndMonth = parts.slice(1).join(' ');
     return (
       <>
         {dayOfWeekCapitalized}
         <br />
         {dayAndMonth}
       </>
-    )
-  }
+    );
+  }, []);
 
   return (
     <div>
@@ -91,16 +95,26 @@ export default function DayTabsContent({
             <div>{daysData[selectedIndex].date}</div>
           </div>
           <div className={styles.scores}>
-            <div><Triangle size={12} /> Relationship: {daysData[selectedIndex].score.relationship}</div>
-            <div><Diamond size={12} /> Career: {daysData[selectedIndex].score.career}</div>
-            <div><Heart size={12} /> Health: {daysData[selectedIndex].score.health}</div>
+            <div>
+              <Triangle size={12} /> Relationship:{' '}
+              {daysData[selectedIndex].score.relationship}
+            </div>
+            <div>
+              <Diamond size={12} /> Career:{' '}
+              {daysData[selectedIndex].score.career}
+            </div>
+            <div>
+              <Heart size={12} /> Health:{' '}
+              {daysData[selectedIndex].score.health}
+            </div>
           </div>
           <div className={styles.fact}>
-            {daysData[selectedIndex].catFact || (isLoading ? 'Loading...' : catFact || '')}
+            {daysData[selectedIndex].catFact ||
+              (isLoading ? 'Loading...' : catFact || '')}
           </div>
           <CopyLinkButton />
         </div>
       )}
     </div>
-  )
+  );
 }

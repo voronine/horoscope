@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { zodiacSigns } from '@/utils/horoscope';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
@@ -13,11 +13,11 @@ type ZodiacSelectorProps = {
 export default function ZodiacSelector({ onSelect }: ZodiacSelectorProps) {
   const [selectedSign, setSelectedSign] = useState(zodiacSigns[0]);
 
-  const handleChange = (e: SelectChangeEvent<string>) => {
+  const handleChange = useCallback((e: SelectChangeEvent<string>) => {
     const sign = e.target.value as string;
     setSelectedSign(sign);
     onSelect(sign);
-  };
+  }, [onSelect]);
 
   return (
     <div className={styles.select}>
@@ -29,12 +29,12 @@ export default function ZodiacSelector({ onSelect }: ZodiacSelectorProps) {
             width: 150,
             '& .MuiInputBase-input': {
               fontSize: '0.8rem',
-              padding: '4px',
+              padding: '4px'
             },
             '& .MuiInputLabel-root': {
-              fontSize: '0.8rem',
-            },
-          },
+              fontSize: '0.8rem'
+            }
+          }
         }}
       >
         <InputLabel id="zodiac-selector-label">Horoscope</InputLabel>
@@ -46,7 +46,7 @@ export default function ZodiacSelector({ onSelect }: ZodiacSelectorProps) {
           label="Horoscope"
           autoWidth={false}
         >
-          {zodiacSigns.map((sign) => (
+          {zodiacSigns.map(sign => (
             <MenuItem key={sign} value={sign}>
               {sign}
             </MenuItem>
