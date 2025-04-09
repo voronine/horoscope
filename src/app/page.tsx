@@ -47,7 +47,7 @@ export default function HomePage() {
         days={days}
         selectedIndex={selectedIndex}
         onTabSelect={setSelectedIndex}
-        currentDay={currentDay}
+        daysData={dayData}
         sign={sign}
         isLoading={isCatLoading}
         catFact={catFact || ''}
