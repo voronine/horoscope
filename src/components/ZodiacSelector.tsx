@@ -1,5 +1,5 @@
 'use client'
-import { useCallback } from 'react'
+import React, { useCallback } from 'react'
 import { zodiacSigns } from '@/utils/horoscope'
 import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
@@ -12,7 +12,7 @@ type ZodiacSelectorProps = {
   onSelect: (sign: string) => void
 }
 
-export default function ZodiacSelector({ value, onSelect }: ZodiacSelectorProps) {
+const ZodiacSelector: React.FC<ZodiacSelectorProps> = ({ value, onSelect }) => {
   const handleChange = useCallback((e: SelectChangeEvent<string>) => {
     const sign = e.target.value as string
     onSelect(sign)
@@ -75,3 +75,5 @@ export default function ZodiacSelector({ value, onSelect }: ZodiacSelectorProps)
     </div>
   )
 }
+
+export default ZodiacSelector

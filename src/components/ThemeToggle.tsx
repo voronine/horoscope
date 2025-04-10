@@ -1,12 +1,12 @@
 'use client'
-import { useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from '@/store/hooks/hooks'
 import { setTheme, toggleTheme } from '@/store/slices/themeSlice'
 import styles from './ThemeToggle.module.css'
 
-export default function ThemeToggle() {
+const ThemeToggle: React.FC = () => {
   const dispatch = useAppDispatch()
-  const theme = useAppSelector(state => state.theme.theme)
+  const theme = useAppSelector((state) => state.theme.theme)
 
   useEffect(() => {
     const storedTheme = localStorage.getItem('theme')
@@ -42,3 +42,5 @@ export default function ThemeToggle() {
     </button>
   )
 }
+
+export default ThemeToggle

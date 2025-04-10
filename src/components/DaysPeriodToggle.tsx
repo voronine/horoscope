@@ -1,5 +1,5 @@
 'use client'
-import { useCallback } from 'react'
+import React, { useCallback } from 'react'
 import Button from '@mui/material/Button'
 
 type DaysPeriodToggleProps = {
@@ -7,7 +7,7 @@ type DaysPeriodToggleProps = {
   onToggle: (newDays: number) => void
 }
 
-export default function DaysPeriodToggle({ days, onToggle }: DaysPeriodToggleProps) {
+const DaysPeriodToggle: React.FC<DaysPeriodToggleProps> = ({ days, onToggle }) => {
   const toggleDays = useCallback(() => {
     const newDays = days === 3 ? 7 : 3
     onToggle(newDays)
@@ -28,3 +28,5 @@ export default function DaysPeriodToggle({ days, onToggle }: DaysPeriodTogglePro
     </Button>
   )
 }
+
+export default DaysPeriodToggle

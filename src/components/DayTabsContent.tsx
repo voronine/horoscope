@@ -1,3 +1,5 @@
+'use client'
+import React, { useMemo, useCallback } from 'react'
 import { format, addDays } from 'date-fns'
 import { uk } from 'date-fns/locale'
 import MoodImage from './MoodImage'
@@ -6,9 +8,8 @@ import styles from './DaysTabs.module.css'
 import { Heart } from 'lucide-react'
 import { Diamond } from 'lucide-react'
 import { Triangle } from 'lucide-react'
-import { useMemo, useCallback } from 'react'
 
-type DayData = {
+export type DayData = {
   score: {
     health: number
     relationship: number
@@ -18,7 +19,7 @@ type DayData = {
   date: string
 }
 
-type Props = {
+type DayTabsContentProps = {
   days: number
   selectedIndex: number
   onTabSelect: (index: number) => void
@@ -28,14 +29,14 @@ type Props = {
   catFact: string
 }
 
-export default function DayTabsContent({
+const DayTabsContent: React.FC<DayTabsContentProps> = ({
   days,
   selectedIndex,
   onTabSelect,
   daysData,
   isLoading,
   catFact
-}: Props) {
+}) => {
   const tabLabels: string[] = useMemo(() => {
     return Array.from({ length: days }, (_, i) => {
       const d = addDays(new Date(), i)
@@ -50,8 +51,7 @@ export default function DayTabsContent({
   const formatLabel = useCallback((label: string) => {
     const parts = label.split(' ')
     const dayOfWeek = parts[0]
-    const dayOfWeekCapitalized =
-      dayOfWeek.charAt(0).toUpperCase() + dayOfWeek.slice(1)
+    const dayOfWeekCapitalized = dayOfWeek.charAt(0).toUpperCase() + dayOfWeek.slice(1)
     const dayAndMonth = parts.slice(1).join(' ')
     return (
       <>
@@ -111,22 +111,18 @@ export default function DayTabsContent({
             </div>
             <div className={styles.scores}>
               <div>
-                <Triangle size={12} /> Relationship:{' '}
-                {daysData[selectedIndex].score.relationship}
+                <Triangle size={12} /> Relationship: {daysData[selectedIndex].score.relationship}
               </div>
               <div>
-                <Diamond size={12} /> Career:{' '}
-                {daysData[selectedIndex].score.career}
+                <Diamond size={12} /> Career: {daysData[selectedIndex].score.career}
               </div>
               <div>
-                <Heart size={12} /> Health:{' '}
-                {daysData[selectedIndex].score.health}
+                <Heart size={12} /> Health: {daysData[selectedIndex].score.health}
               </div>
             </div>
           </div>
           <div className={styles.fact}>
-            {daysData[selectedIndex].catFact ||
-              (isLoading ? 'Loading...' : catFact || '')}
+            {daysData[selectedIndex].catFact || (isLoading ? 'Loading...' : catFact || '')}
           </div>
           <CopyLinkButton />
         </div>
@@ -134,3 +130,5 @@ export default function DayTabsContent({
     </div>
   )
 }
+
+export default DayTabsContent

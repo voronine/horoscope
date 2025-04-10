@@ -5,9 +5,11 @@ type MoodImageProps = {
   indicator: string
 }
 
-export default function MoodImage({ indicator }: MoodImageProps) {
+const MoodImage: React.FC<MoodImageProps> = ({ indicator }) => {
   if (indicator === 'relationship') return <Triangle size={95} />
   if (indicator === 'career') return <Diamond size={95} />
   if (indicator === 'health') return <Heart size={95} />
   return null
 }
+
+export default MoodImage
