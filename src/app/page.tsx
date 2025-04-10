@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState, useMemo, useCallback } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import ZodiacSelector from '@/components/ZodiacSelector'
 import ZodiacLogo from '@/components/ZodiacLogo'
@@ -15,12 +15,12 @@ import DayTabsContent from '@/components/DayTabsContent'
 import { getUniqueCatFactScores } from '@/utils/horoscope'
 import { setDays } from '@/store/slices/daysPeriodSlice'
 
-type HomePageProps = {
+interface HomePageProps {
   initialSign?: string
   initialDate?: string
 }
 
-export default function HomePage({ initialSign, initialDate }: HomePageProps) {
+function HomePage({ initialSign, initialDate }: HomePageProps) {
   const dispatch = useAppDispatch()
   const router = useRouter()
   const horoscopeData = useAppSelector((state: RootState) => state.horoscope.data)
@@ -41,7 +41,7 @@ export default function HomePage({ initialSign, initialDate }: HomePageProps) {
 
   useEffect(() => {
     if (initialDate && dayData.length > 0) {
-      const idx = dayData.findIndex((day) => day.date === initialDate)
+      const idx = dayData.findIndex(day => day.date === initialDate)
       if (idx !== -1) {
         setSelectedIndex(idx)
       }
@@ -50,7 +50,6 @@ export default function HomePage({ initialSign, initialDate }: HomePageProps) {
 
   const currentDay = useMemo(() => dayData[selectedIndex] || null, [dayData, selectedIndex])
   const uniqueScores = useMemo(() => getUniqueCatFactScores(horoscopeData), [horoscopeData])
-  
   const { data: catFactsMapping, isLoading: isCatLoading } =
     useGetAllCatFactsQuery(uniqueScores, { skip: uniqueScores.length === 0 })
   const currentCatFact = currentDay ? catFactsMapping?.[currentDay.catFactParam] || '' : ''
@@ -61,9 +60,9 @@ export default function HomePage({ initialSign, initialDate }: HomePageProps) {
     }
   }, [sign, currentDay, router])
 
-  const handleToggleDays = useCallback((newDays: number) => {
+  const handleToggleDays = (newDays: number) => {
     dispatch(setDays(newDays))
-  }, [dispatch])
+  }
 
   if (status !== 'succeeded') {
     return (
@@ -106,3 +105,5 @@ export default function HomePage({ initialSign, initialDate }: HomePageProps) {
     </main>
   )
 }
+
+export default HomePage
