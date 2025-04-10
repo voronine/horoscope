@@ -20,7 +20,7 @@ interface HomePageProps {
   initialDate?: string
 }
 
-export default function HomePage({ initialSign, initialDate }: HomePageProps) {
+const HomePage: React.FC<HomePageProps> = ({ initialSign, initialDate }) => {
   const dispatch = useAppDispatch()
   const router = useRouter()
   const horoscopeData = useAppSelector((state: RootState) => state.horoscope.data)
@@ -42,9 +42,7 @@ export default function HomePage({ initialSign, initialDate }: HomePageProps) {
   useEffect(() => {
     if (initialDate && dayData.length > 0) {
       const idx = dayData.findIndex((day) => day.date === initialDate)
-      if (idx !== -1) {
-        setSelectedIndex(idx)
-      }
+      if (idx !== -1) setSelectedIndex(idx)
     }
   }, [initialDate, dayData])
 
@@ -106,3 +104,5 @@ export default function HomePage({ initialSign, initialDate }: HomePageProps) {
     </main>
   )
 }
+
+export default HomePage
