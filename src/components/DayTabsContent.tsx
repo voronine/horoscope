@@ -17,6 +17,7 @@ export type DayData = {
   }
   catFact?: string
   date: string
+  catFactParam?: number;
 }
 
 type DayTabsContentProps = {

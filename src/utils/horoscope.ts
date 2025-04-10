@@ -53,10 +53,16 @@ export function generateHoroscopeData(): HoroscopeData {
       const health = generateScore(dateString, sign);
       const relationship = generateScore(dateString, sign);
       const career = generateScore(dateString, sign);
-      const averageScore = Math.floor((health + relationship + career) / 3);
+      const averageScore = Math.floor(
+        (health + relationship + career) / 3
+      );
       return {
         date: dateString,
-        score: { health, relationship, career },
+        score: {
+          health: health,
+          relationship: relationship,
+          career: career,
+        },
         catFact: '',
         catFactParam: averageScore,
       };
@@ -66,13 +72,15 @@ export function generateHoroscopeData(): HoroscopeData {
   return { startDate, data };
 }
 
-export function getUniqueCatFactScores(horoscopeData: HoroscopeData | null): number[] {
-  if (!horoscopeData) return []
-  const scores = new Set<number>()
-  Object.values(horoscopeData.data).forEach(daysArray => {
-    daysArray.forEach(day => {
-      scores.add(day.catFactParam)
-    })
-  })
-  return Array.from(scores)
+export function getUniqueCatFactScores(
+  horoscopeData: HoroscopeData | null
+): number[] {
+  if (!horoscopeData) return [];
+  const scores = new Set<number>();
+  Object.values(horoscopeData.data).forEach((daysArray) => {
+    daysArray.forEach((day) => {
+      scores.add(day.catFactParam);
+    });
+  });
+  return Array.from(scores);
 }
