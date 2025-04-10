@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState, useMemo } from 'react'
+import { useEffect, useState, useMemo, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import ZodiacSelector from '@/components/ZodiacSelector'
 import ZodiacLogo from '@/components/ZodiacLogo'
@@ -20,7 +20,7 @@ interface HomePageProps {
   initialDate?: string
 }
 
-function HomePage({ initialSign, initialDate }: HomePageProps) {
+export default function HomePage({ initialSign, initialDate }: HomePageProps) {
   const dispatch = useAppDispatch()
   const router = useRouter()
   const horoscopeData = useAppSelector((state: RootState) => state.horoscope.data)
@@ -41,7 +41,7 @@ function HomePage({ initialSign, initialDate }: HomePageProps) {
 
   useEffect(() => {
     if (initialDate && dayData.length > 0) {
-      const idx = dayData.findIndex(day => day.date === initialDate)
+      const idx = dayData.findIndex((day) => day.date === initialDate)
       if (idx !== -1) {
         setSelectedIndex(idx)
       }
@@ -50,8 +50,9 @@ function HomePage({ initialSign, initialDate }: HomePageProps) {
 
   const currentDay = useMemo(() => dayData[selectedIndex] || null, [dayData, selectedIndex])
   const uniqueScores = useMemo(() => getUniqueCatFactScores(horoscopeData), [horoscopeData])
-  const { data: catFactsMapping, isLoading: isCatLoading } =
-    useGetAllCatFactsQuery(uniqueScores, { skip: uniqueScores.length === 0 })
+  const { data: catFactsMapping, isLoading: isCatLoading } = useGetAllCatFactsQuery(uniqueScores, {
+    skip: uniqueScores.length === 0,
+  })
   const currentCatFact = currentDay ? catFactsMapping?.[currentDay.catFactParam] || '' : ''
 
   useEffect(() => {
@@ -60,9 +61,9 @@ function HomePage({ initialSign, initialDate }: HomePageProps) {
     }
   }, [sign, currentDay, router])
 
-  const handleToggleDays = (newDays: number) => {
+  const handleToggleDays = useCallback((newDays: number) => {
     dispatch(setDays(newDays))
-  }
+  }, [dispatch])
 
   if (status !== 'succeeded') {
     return (
@@ -105,5 +106,3 @@ function HomePage({ initialSign, initialDate }: HomePageProps) {
     </main>
   )
 }
-
-export default HomePage
