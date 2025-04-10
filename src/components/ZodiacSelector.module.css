@@ -1,12 +1,10 @@
 .select {
-    width: 120px;
-    margin-right: 80px;
+    margin-left: 30px;
 }
 
 @media (max-width: 500px) {
     .select {
-        width: 80px;
-        margin-right: 50px;
+        margin-right: 10px;
     }
   }
   

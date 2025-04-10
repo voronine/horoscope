@@ -1,5 +1,6 @@
 'use client'
 import React, { useMemo, useCallback } from 'react'
+import Link from 'next/link'
 import { format, addDays } from 'date-fns'
 import { uk } from 'date-fns/locale'
 import MoodImage from './MoodImage'
@@ -8,17 +9,7 @@ import styles from './DaysTabs.module.css'
 import { Heart } from 'lucide-react'
 import { Diamond } from 'lucide-react'
 import { Triangle } from 'lucide-react'
-
-export type DayData = {
-  score: {
-    health: number
-    relationship: number
-    career: number
-  }
-  catFact?: string
-  date: string
-  catFactParam?: number;
-}
+import { DayData } from '@/utils/horoscope'
 
 type DayTabsContentProps = {
   days: number
@@ -35,56 +26,58 @@ const DayTabsContent: React.FC<DayTabsContentProps> = ({
   selectedIndex,
   onTabSelect,
   daysData,
+  sign,
   isLoading,
   catFact
 }) => {
   const tabLabels: string[] = useMemo(() => {
     return Array.from({ length: days }, (_, i) => {
       const d = addDays(new Date(), i)
-      return (format as unknown as (date: Date, formatString: string, options?: { locale: typeof uk }) => string)(
-        d,
-        'EEEE dd MMMM',
-        { locale: uk }
-      )
+      return (format as unknown as (
+        date: Date,
+        formatString: string,
+        options?: { locale: typeof uk }
+      ) => string)(d, 'EEEE dd MMMM', { locale: uk })
     })
-  }, [days])
+  }, [days]);
 
   const formatLabel = useCallback((label: string) => {
-    const parts = label.split(' ')
-    const dayOfWeek = parts[0]
-    const dayOfWeekCapitalized = dayOfWeek.charAt(0).toUpperCase() + dayOfWeek.slice(1)
-    const dayAndMonth = parts.slice(1).join(' ')
+    const parts = label.split(' ');
+    const dayOfWeek = parts[0];
+    const dayOfWeekCapitalized = dayOfWeek.charAt(0).toUpperCase() + dayOfWeek.slice(1);
+    const dayAndMonth = parts.slice(1).join(' ');
     return (
       <>
         {dayOfWeekCapitalized}
         <br />
         {dayAndMonth}
       </>
-    )
-  }, [])
+    );
+  }, []);
 
   const bestIndicator = useMemo(() => {
-    if (!daysData[selectedIndex]) return ''
-    const scores = daysData[selectedIndex].score
-    let bestKey = ''
-    let bestValue = -Infinity
+    if (!daysData[selectedIndex]) return '';
+    const scores = daysData[selectedIndex].score;
+    let bestKey = '';
+    let bestValue = -Infinity;
     Object.entries(scores).forEach(([key, value]) => {
       if (value > bestValue) {
-        bestValue = value
-        bestKey = key
+        bestValue = value;
+        bestKey = key;
       }
-    })
-    return bestKey
-  }, [daysData, selectedIndex])
+    });
+    return bestKey;
+  }, [daysData, selectedIndex]);
 
   return (
     <div>
       <div className={styles.tabs}>
         {tabLabels.map((label, i) => (
-          <button
+          <Link
             key={label}
-            onClick={() => onTabSelect(i)}
+            href={`/horoscope/${sign}/${daysData[i].date}`}
             className={i === selectedIndex ? styles.active : styles.tab}
+            onClick={() => onTabSelect(i)}
           >
             <div className={styles.spanDay}>{formatLabel(label)}</div>
             <div className={styles.block}>
@@ -101,7 +94,7 @@ const DayTabsContent: React.FC<DayTabsContentProps> = ({
                 {daysData[i]?.score.health}
               </div>
             </div>
-          </button>
+          </Link>
         ))}
       </div>
       {daysData[selectedIndex] && (
@@ -123,13 +116,14 @@ const DayTabsContent: React.FC<DayTabsContentProps> = ({
             </div>
           </div>
           <div className={styles.fact}>
-            {daysData[selectedIndex].catFact || (isLoading ? 'Loading...' : catFact || '')}
+            {daysData[selectedIndex].catFact ||
+              (isLoading ? 'Loading...' : catFact || '')}
           </div>
           <CopyLinkButton />
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default DayTabsContent
+export default DayTabsContent;

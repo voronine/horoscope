@@ -1,18 +1,22 @@
-import React from 'react'
-import styles from './ZodiacLogo.module.css'
+import Image from 'next/image';
 
 type ZodiacLogoProps = {
-  sign: string
-}
+  sign: string;
+};
+
+const myLoader = ({ src }: { src: string }): string => src;
 
 const ZodiacLogo: React.FC<ZodiacLogoProps> = ({ sign }) => {
   return (
-    <img
+    <Image
+      loader={myLoader}
+      unoptimized
       src={`/images/zodiac/${sign}.png`}
       alt={`${sign} logo`}
-      className={styles.zodiacLogo}
+      width={120}
+      height={120}
     />
-  )
-}
+  );
+};
 
-export default ZodiacLogo
+export default ZodiacLogo;

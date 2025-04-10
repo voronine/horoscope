@@ -3,12 +3,14 @@ import horoscopeReducer from './slices/horoscopeSlice'
 import { apiSlice } from '../api/apiSlice'
 import themeReducer from './slices/themeSlice'
 import daysPeriodReducer from './slices/daysPeriodSlice'
+import navigationReducer from './slices/navigationSlice'
 
 export const store = configureStore({
   reducer: {
     horoscope: horoscopeReducer,
     theme: themeReducer,
     daysPeriod: daysPeriodReducer,
+    navigation: navigationReducer,
     [apiSlice.reducerPath]: apiSlice.reducer
   },
   middleware: (getDefaultMiddleware) =>
