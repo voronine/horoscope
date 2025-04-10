@@ -1,16 +1,14 @@
-import { useState, useCallback } from 'react'
+import { useCallback } from 'react'
 import Button from '@mui/material/Button'
 
 type DaysPeriodToggleProps = {
-  onToggle: (days: number) => void
+  days: number
+  onToggle: (newDays: number) => void
 }
 
-export default function DaysPeriodToggle({ onToggle }: DaysPeriodToggleProps) {
-  const [days, setDays] = useState(3)
-
+export default function DaysPeriodToggle({ days, onToggle }: DaysPeriodToggleProps) {
   const toggleDays = useCallback(() => {
     const newDays = days === 3 ? 7 : 3
-    setDays(newDays)
     onToggle(newDays)
   }, [days, onToggle])
 
@@ -22,9 +20,7 @@ export default function DaysPeriodToggle({ onToggle }: DaysPeriodToggleProps) {
         backgroundColor: 'var(--button-bg)',
         color: 'var(--text-color)',
         height: 20,
-        '&:hover': {
-          backgroundColor: 'var(--button-bg)',
-        }
+        '&:hover': { backgroundColor: 'var(--button-bg)' }
       }}
     >
       {days === 3 ? '7 Days' : '3 Days'}

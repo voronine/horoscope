@@ -36,17 +36,22 @@ export default function DayTabsContent({
   isLoading,
   catFact
 }: Props) {
-  const tabLabels = useMemo(() => {
+  const tabLabels: string[] = useMemo(() => {
     return Array.from({ length: days }, (_, i) => {
       const d = addDays(new Date(), i)
-      return (format as any)(d, 'EEEE dd MMMM', { locale: uk })
+      return (format as unknown as (date: Date, formatString: string, options?: { locale: typeof uk }) => string)(
+        d,
+        'EEEE dd MMMM',
+        { locale: uk }
+      )
     })
   }, [days])
 
   const formatLabel = useCallback((label: string) => {
     const parts = label.split(' ')
     const dayOfWeek = parts[0]
-    const dayOfWeekCapitalized = dayOfWeek.charAt(0).toUpperCase() + dayOfWeek.slice(1)
+    const dayOfWeekCapitalized =
+      dayOfWeek.charAt(0).toUpperCase() + dayOfWeek.slice(1)
     const dayAndMonth = parts.slice(1).join(' ')
     return (
       <>

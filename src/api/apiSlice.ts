@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import type { QueryReturnValue, FetchBaseQueryError, FetchBaseQueryMeta } from '@reduxjs/toolkit/query'
 
 export interface CatFactResponse {
   fact: string
@@ -9,22 +10,33 @@ export const apiSlice = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: 'https://catfact.ninja/' }),
   endpoints: (builder) => ({
     getAllCatFacts: builder.query<Record<number, string>, number[]>({
-      async queryFn(scores, _queryApi, _extraOptions, baseQuery) {
+      async queryFn(
+        scores: number[],
+        _queryApi,
+        _extraOptions,
+        baseQuery
+      ): Promise<QueryReturnValue<Record<number, string>, FetchBaseQueryError, FetchBaseQueryMeta>> {
         try {
-          const promises = scores.map(async (score) => {
-            const result = await baseQuery(`fact?random=${score}`)
-            if (result.error) throw result.error
-            const data = result.data as CatFactResponse
-            return { score, fact: data.fact }
-          })
-          const results = await Promise.all(promises)
+          const responses = await Promise.all(
+            scores.map(async (score) => {
+              const result = await baseQuery(`fact?random=${score}`)
+              if (result.error) throw result.error
+              const data = result.data as CatFactResponse
+              return { score, fact: data.fact }
+            })
+          )
           const mapping: Record<number, string> = {}
-          results.forEach(({ score, fact }) => {
+          responses.forEach(({ score, fact }) => {
             mapping[score] = fact
           })
           return { data: mapping }
-        } catch (error) {
-          return { error: error as any }
+        } catch (error: unknown) {
+          return {
+            error: {
+              status: 500,
+              data: error instanceof Error ? error.message : 'Unknown error occurred'
+            }
+          }
         }
       }
     })

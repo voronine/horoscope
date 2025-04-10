@@ -30,6 +30,13 @@
   gap: 30px;
 }
 
+.spiner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+}
+
 @media (max-width: 1024px) {
   .wrapper {
     padding: 25px 50px;

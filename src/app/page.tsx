@@ -15,7 +15,7 @@ import DayTabsContent from '@/components/DayTabsContent'
 import { getUniqueCatFactScores } from '@/utils/horoscope'
 
 type HomePageProps = {
-  initialSign?: string,
+  initialSign?: string
   initialDate?: string
 }
 
@@ -54,7 +54,6 @@ export default function HomePage({ initialSign, initialDate }: HomePageProps) {
   const uniqueScores = useMemo(() => getUniqueCatFactScores(horoscopeData), [horoscopeData])
   const { data: catFactsMapping, isLoading: isCatLoading } =
     useGetAllCatFactsQuery(uniqueScores, { skip: uniqueScores.length === 0 })
-
   const currentCatFact = currentDay ? catFactsMapping?.[currentDay.catFactParam] || '' : ''
 
   useEffect(() => {
@@ -69,11 +68,11 @@ export default function HomePage({ initialSign, initialDate }: HomePageProps) {
         <header className={styles.header}>
           <ZodiacLogo sign={sign} />
           <div className={styles.selectorToggle}>
-            <ZodiacSelector onSelect={setSign} />
+            <ZodiacSelector value={sign} onSelect={setSign} />
             <ThemeToggle />
           </div>
         </header>
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
+        <div className={styles.spiner}>
           <CircularProgress />
         </div>
       </main>
@@ -85,12 +84,12 @@ export default function HomePage({ initialSign, initialDate }: HomePageProps) {
       <header className={styles.header}>
         <ZodiacLogo sign={sign} />
         <div className={styles.selectorToggle}>
-          <ZodiacSelector onSelect={setSign} />
+          <ZodiacSelector value={sign} onSelect={setSign} />
           <ThemeToggle />
         </div>
       </header>
       <section className={styles.controls}>
-        <DaysPeriodToggle onToggle={setDays} />
+        <DaysPeriodToggle days={days} onToggle={setDays} />
       </section>
       <DayTabsContent
         days={days}
