@@ -2,11 +2,13 @@ import { configureStore } from '@reduxjs/toolkit'
 import horoscopeReducer from './slices/horoscopeSlice'
 import { apiSlice } from '../api/apiSlice'
 import themeReducer from './slices/themeSlice'
+import daysPeriodReducer from './slices/daysPeriodSlice'
 
 export const store = configureStore({
   reducer: {
     horoscope: horoscopeReducer,
     theme: themeReducer,
+    daysPeriod: daysPeriodReducer,
     [apiSlice.reducerPath]: apiSlice.reducer
   },
   middleware: (getDefaultMiddleware) =>

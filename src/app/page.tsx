@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState, useMemo } from 'react'
+import { useEffect, useState, useMemo, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import ZodiacSelector from '@/components/ZodiacSelector'
 import ZodiacLogo from '@/components/ZodiacLogo'
@@ -13,6 +13,7 @@ import { initializeHoroscopeData } from '@/store/slices/horoscopeSlice'
 import { useGetAllCatFactsQuery } from '@/api/apiSlice'
 import DayTabsContent from '@/components/DayTabsContent'
 import { getUniqueCatFactScores } from '@/utils/horoscope'
+import { setDays } from '@/store/slices/daysPeriodSlice'
 
 type HomePageProps = {
   initialSign?: string
@@ -24,8 +25,8 @@ export default function HomePage({ initialSign, initialDate }: HomePageProps) {
   const router = useRouter()
   const horoscopeData = useAppSelector((state: RootState) => state.horoscope.data)
   const status = useAppSelector((state: RootState) => state.horoscope.status)
+  const days = useAppSelector((state: RootState) => state.daysPeriod.days)
   const [sign, setSign] = useState(initialSign ?? 'Aries')
-  const [days, setDays] = useState(3)
   const [selectedIndex, setSelectedIndex] = useState(0)
 
   useEffect(() => {
@@ -40,18 +41,16 @@ export default function HomePage({ initialSign, initialDate }: HomePageProps) {
 
   useEffect(() => {
     if (initialDate && dayData.length > 0) {
-      const idx = dayData.findIndex(day => day.date === initialDate)
+      const idx = dayData.findIndex((day) => day.date === initialDate)
       if (idx !== -1) {
         setSelectedIndex(idx)
       }
     }
   }, [initialDate, dayData])
 
-  const currentDay = useMemo(() => {
-    return dayData[selectedIndex] || null
-  }, [dayData, selectedIndex])
-
+  const currentDay = useMemo(() => dayData[selectedIndex] || null, [dayData, selectedIndex])
   const uniqueScores = useMemo(() => getUniqueCatFactScores(horoscopeData), [horoscopeData])
+  
   const { data: catFactsMapping, isLoading: isCatLoading } =
     useGetAllCatFactsQuery(uniqueScores, { skip: uniqueScores.length === 0 })
   const currentCatFact = currentDay ? catFactsMapping?.[currentDay.catFactParam] || '' : ''
@@ -61,6 +60,10 @@ export default function HomePage({ initialSign, initialDate }: HomePageProps) {
       router.push(`/horoscope/${sign}/${currentDay.date}`)
     }
   }, [sign, currentDay, router])
+
+  const handleToggleDays = useCallback((newDays: number) => {
+    dispatch(setDays(newDays))
+  }, [dispatch])
 
   if (status !== 'succeeded') {
     return (
@@ -89,7 +92,7 @@ export default function HomePage({ initialSign, initialDate }: HomePageProps) {
         </div>
       </header>
       <section className={styles.controls}>
-        <DaysPeriodToggle days={days} onToggle={setDays} />
+        <DaysPeriodToggle days={days} onToggle={handleToggleDays} />
       </section>
       <DayTabsContent
         days={days}
