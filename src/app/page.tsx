@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState, useMemo, useCallback } from 'react'
+import React, { useEffect, useState, useMemo, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import ZodiacSelector from '@/components/ZodiacSelector'
 import ZodiacLogo from '@/components/ZodiacLogo'
@@ -15,15 +15,20 @@ import DayTabsContent from '@/components/DayTabsContent'
 import { getUniqueCatFactScores } from '@/utils/horoscope'
 import { setDays } from '@/store/slices/daysPeriodSlice'
 
-interface HomePageProps {
+type HomePageProps = {
   initialSign?: string
   initialDate?: string
 }
 
-const HomePage: React.FC<HomePageProps> = ({ initialSign, initialDate }) => {
+const HomePage = ({
+  initialSign,
+  initialDate,
+}: HomePageProps) => {
   const dispatch = useAppDispatch()
   const router = useRouter()
-  const horoscopeData = useAppSelector((state: RootState) => state.horoscope.data)
+  const horoscopeData = useAppSelector(
+    (state: RootState) => state.horoscope.data
+  )
   const status = useAppSelector((state: RootState) => state.horoscope.status)
   const days = useAppSelector((state: RootState) => state.daysPeriod.days)
   const [sign, setSign] = useState(initialSign ?? 'Aries')
@@ -46,12 +51,19 @@ const HomePage: React.FC<HomePageProps> = ({ initialSign, initialDate }) => {
     }
   }, [initialDate, dayData])
 
-  const currentDay = useMemo(() => dayData[selectedIndex] || null, [dayData, selectedIndex])
-  const uniqueScores = useMemo(() => getUniqueCatFactScores(horoscopeData), [horoscopeData])
-  const { data: catFactsMapping, isLoading: isCatLoading } = useGetAllCatFactsQuery(uniqueScores, {
-    skip: uniqueScores.length === 0,
-  })
-  const currentCatFact = currentDay ? catFactsMapping?.[currentDay.catFactParam] || '' : ''
+  const currentDay = useMemo(
+    () => dayData[selectedIndex] || null,
+    [dayData, selectedIndex]
+  )
+  const uniqueScores = useMemo(
+    () => getUniqueCatFactScores(horoscopeData),
+    [horoscopeData]
+  )
+  const { data: catFactsMapping, isLoading: isCatLoading } =
+    useGetAllCatFactsQuery(uniqueScores, { skip: uniqueScores.length === 0 })
+  const currentCatFact = currentDay
+    ? catFactsMapping?.[currentDay.catFactParam] || ''
+    : ''
 
   useEffect(() => {
     if (currentDay) {
@@ -105,4 +117,4 @@ const HomePage: React.FC<HomePageProps> = ({ initialSign, initialDate }) => {
   )
 }
 
-export default HomePage
+export default HomePage;
