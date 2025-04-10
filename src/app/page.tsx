@@ -5,11 +5,12 @@ import ZodiacSelector from '@/components/ZodiacSelector'
 import ZodiacLogo from '@/components/ZodiacLogo'
 import DaysPeriodToggle from '@/components/DaysPeriodToggle'
 import ThemeToggle from '@/components/ThemeToggle'
+import CircularProgress from '@mui/material/CircularProgress'
 import styles from './page.module.css'
 import { RootState } from '@/store/store'
 import { useAppDispatch, useAppSelector } from '@/store/hooks/hooks'
 import { initializeHoroscopeData } from '@/store/slices/horoscopeSlice'
-import { useGetAllCatFactsQuery } from '@/store/slices/apiSlice'
+import { useGetAllCatFactsQuery } from '@/api/apiSlice'
 import DayTabsContent from '@/components/DayTabsContent'
 import { getUniqueCatFactScores } from '@/utils/horoscope'
 
@@ -51,7 +52,6 @@ export default function HomePage({ initialSign, initialDate }: HomePageProps) {
   }, [dayData, selectedIndex])
 
   const uniqueScores = useMemo(() => getUniqueCatFactScores(horoscopeData), [horoscopeData])
-
   const { data: catFactsMapping, isLoading: isCatLoading } =
     useGetAllCatFactsQuery(uniqueScores, { skip: uniqueScores.length === 0 })
 
@@ -62,6 +62,23 @@ export default function HomePage({ initialSign, initialDate }: HomePageProps) {
       router.push(`/horoscope/${sign}/${currentDay.date}`)
     }
   }, [sign, currentDay, router])
+
+  if (status !== 'succeeded') {
+    return (
+      <main className={styles.wrapper}>
+        <header className={styles.header}>
+          <ZodiacLogo sign={sign} />
+          <div className={styles.selectorToggle}>
+            <ZodiacSelector onSelect={setSign} />
+            <ThemeToggle />
+          </div>
+        </header>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
+          <CircularProgress />
+        </div>
+      </main>
+    )
+  }
 
   return (
     <main className={styles.wrapper}>

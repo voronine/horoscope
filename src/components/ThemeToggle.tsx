@@ -1,28 +1,31 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
+import { useAppDispatch, useAppSelector } from '@/store/hooks/hooks'
+import { setTheme, toggleTheme } from '@/store/slices/themeSlice'
 import styles from './ThemeToggle.module.css'
 
 export default function ThemeToggle() {
-  const [theme, setTheme] = useState('light')
+  const dispatch = useAppDispatch()
+  const theme = useAppSelector(state => state.theme.theme)
 
   useEffect(() => {
     const storedTheme = localStorage.getItem('theme')
-    if (storedTheme) {
-      setTheme(storedTheme)
+    if (storedTheme === 'light' || storedTheme === 'dark') {
+      dispatch(setTheme(storedTheme))
     }
-  }, [])
+  }, [dispatch])
 
   useEffect(() => {
     document.body.dataset.theme = theme
     localStorage.setItem('theme', theme)
   }, [theme])
 
-  const toggleTheme = () => {
-    setTheme(prev => (prev === 'light' ? 'dark' : 'light'))
+  const onToggle = () => {
+    dispatch(toggleTheme())
   }
 
   return (
-    <button onClick={toggleTheme} aria-label="Toggle Theme" className={styles.button}>
+    <button onClick={onToggle} aria-label="Toggle Theme" className={styles.button}>
       {theme === 'light' ? (
         <img
           src="https://img.icons8.com/ios-filled/50/ffffff/moon-symbol.png"
