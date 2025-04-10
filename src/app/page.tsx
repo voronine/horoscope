@@ -1,6 +1,6 @@
 'use client'
 import React, { useEffect, useState, useMemo, useCallback } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import ZodiacSelector from '@/components/ZodiacSelector'
 import ZodiacLogo from '@/components/ZodiacLogo'
 import DaysPeriodToggle from '@/components/DaysPeriodToggle'
@@ -15,65 +15,53 @@ import DayTabsContent from '@/components/DayTabsContent'
 import { getUniqueCatFactScores } from '@/utils/horoscope'
 import { setDays } from '@/store/slices/daysPeriodSlice'
 
-type HomePageProps = {
-  initialSign?: string
-  initialDate?: string
-}
+const HomePage: React.FC = () => {
+  const searchParams = useSearchParams();
+  const initialSign = searchParams.get('sign') || 'Aries';
+  const initialDate = searchParams.get('date') || '';
 
-const HomePage = ({
-  initialSign,
-  initialDate,
-}: HomePageProps) => {
-  const dispatch = useAppDispatch()
-  const router = useRouter()
-  const horoscopeData = useAppSelector(
-    (state: RootState) => state.horoscope.data
-  )
-  const status = useAppSelector((state: RootState) => state.horoscope.status)
-  const days = useAppSelector((state: RootState) => state.daysPeriod.days)
-  const [sign, setSign] = useState(initialSign ?? 'Aries')
-  const [selectedIndex, setSelectedIndex] = useState(0)
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+  const horoscopeData = useAppSelector((state: RootState) => state.horoscope.data);
+  const status = useAppSelector((state: RootState) => state.horoscope.status);
+  const days = useAppSelector((state: RootState) => state.daysPeriod.days);
+  const [sign, setSign] = useState(initialSign);
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
   useEffect(() => {
     if (status === 'idle') {
-      dispatch(initializeHoroscopeData())
+      dispatch(initializeHoroscopeData());
     }
-  }, [status, dispatch])
+  }, [status, dispatch]);
 
   const dayData = useMemo(() => {
-    return horoscopeData ? horoscopeData.data[sign].slice(0, days) : []
-  }, [horoscopeData, sign, days])
+    return horoscopeData ? horoscopeData.data[sign].slice(0, days) : [];
+  }, [horoscopeData, sign, days]);
 
   useEffect(() => {
     if (initialDate && dayData.length > 0) {
-      const idx = dayData.findIndex((day) => day.date === initialDate)
-      if (idx !== -1) setSelectedIndex(idx)
+      const idx = dayData.findIndex(day => day.date === initialDate);
+      if (idx !== -1) setSelectedIndex(idx);
     }
-  }, [initialDate, dayData])
+  }, [initialDate, dayData]);
 
-  const currentDay = useMemo(
-    () => dayData[selectedIndex] || null,
-    [dayData, selectedIndex]
-  )
-  const uniqueScores = useMemo(
-    () => getUniqueCatFactScores(horoscopeData),
-    [horoscopeData]
-  )
+  const currentDay = useMemo(() => dayData[selectedIndex] || null, [dayData, selectedIndex]);
+  const uniqueScores = useMemo(() => getUniqueCatFactScores(horoscopeData), [horoscopeData]);
   const { data: catFactsMapping, isLoading: isCatLoading } =
-    useGetAllCatFactsQuery(uniqueScores, { skip: uniqueScores.length === 0 })
+    useGetAllCatFactsQuery(uniqueScores, { skip: uniqueScores.length === 0 });
   const currentCatFact = currentDay
     ? catFactsMapping?.[currentDay.catFactParam] || ''
-    : ''
+    : '';
 
   useEffect(() => {
     if (currentDay) {
-      router.push(`/horoscope/${sign}/${currentDay.date}`)
+      router.push(`/horoscope/${sign}/${currentDay.date}`);
     }
-  }, [sign, currentDay, router])
+  }, [sign, currentDay, router]);
 
   const handleToggleDays = useCallback((newDays: number) => {
-    dispatch(setDays(newDays))
-  }, [dispatch])
+    dispatch(setDays(newDays));
+  }, [dispatch]);
 
   if (status !== 'succeeded') {
     return (
@@ -89,7 +77,7 @@ const HomePage = ({
           <CircularProgress />
         </div>
       </main>
-    )
+    );
   }
 
   return (
@@ -114,7 +102,7 @@ const HomePage = ({
         catFact={currentCatFact}
       />
     </main>
-  )
-}
+  );
+};
 
 export default HomePage;
