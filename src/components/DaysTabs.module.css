@@ -5,6 +5,7 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 15px;
   width: 80vw;
+  animation: fadeIn 0.5s ease-out;
 }
 
 .merged {
@@ -40,6 +41,7 @@
   top: 5;
   color: var(--text-color);
   text-decoration: none;
+  transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 .tab:hover {
@@ -61,6 +63,12 @@
   box-shadow: 2px 0 4px -2px rgba(0, 0, 0, 0.2);
   color: var(--text-color);
   text-decoration: none;
+  transform: scale(1.05);
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.tabs > .active:first-child {
+  transform: none;
 }
 
 .block {
@@ -84,12 +92,14 @@
   display: flex;
   gap: 50px;
   margin-bottom: 30px;
+  animation: fadeIn 0.5s ease-out;
 }
 
 .scores {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  animation: fadeIn 0.6s ease-out;
 }
 
 .fact {
@@ -97,6 +107,7 @@
   margin-bottom: 10px;
   height: 70px;
   font-size: 14px;
+  animation: fadeIn 0.7s ease-out;
 }
 
 @media (max-width: 1024px) {
@@ -105,9 +116,11 @@
     font-size: 14px;
     flex: 0 0 70px;
   }
+
   .active {
     padding: 13px 10px 6px 10px;
   }
+
   .tab {
     padding: 6px 10px;
   }
@@ -119,9 +132,11 @@
     font-size: 11px;
     flex: 0 0 60px;
   }
+
   .active {
     padding: 13px 5px 6px 5px;
   }
+
   .tab {
     padding: 6px 5px;
   }
@@ -133,9 +148,11 @@
     font-size: 10px;
     flex: 0 0 50px;
   }
+
   .active {
     padding: 13px 5px 6px 5px;
   }
+
   .tab {
     padding: 6px 5px;
   }
@@ -147,9 +164,11 @@
     font-size: 6px;
     flex: 0 0 40px;
   }
+
   .active {
     padding: 13px 1px 6px 5px;
   }
+
   .tab {
     padding: 6px 1px;
   }
@@ -157,4 +176,16 @@
 
 .fact {
   font-size: 12px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
