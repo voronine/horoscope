@@ -12,7 +12,6 @@ import { useAppDispatch, useAppSelector } from '@/store/hooks/hooks'
 import { initializeHoroscopeData } from '@/store/slices/horoscopeSlice'
 import { useGetAllCatFactsQuery } from '@/api/apiSlice'
 import DayTabsContent from '@/components/DayTabsContent'
-import { getUniqueCatFactScores } from '@/utils/horoscope'
 import { setDays } from '@/store/slices/daysPeriodSlice'
 import { setSign, setSelectedIndex } from '@/store/slices/navigationSlice'
 
@@ -33,13 +32,13 @@ const HomePage: React.FC = () => {
     if (!initialized) {
       dispatch(setSign(urlSign))
     }
-  }, [initialized, urlSign, dispatch])
+  }, [initialized, urlSign])
 
   useEffect(() => {
     if (status === 'idle') {
       dispatch(initializeHoroscopeData())
     }
-  }, [status, dispatch])
+  }, [status])
 
   const dayData = useMemo(() => {
     return horoscopeData ? horoscopeData.data[sign].slice(0, days) : []
@@ -52,9 +51,13 @@ const HomePage: React.FC = () => {
         dispatch(setSelectedIndex(index))
       }
     }
-  }, [urlDate, dayData, dispatch])
+  }, [urlDate, dayData])
 
-  const uniqueScores = useMemo(() => getUniqueCatFactScores(horoscopeData), [horoscopeData])
+  const uniqueScores = useMemo(() => {
+    if (!horoscopeData) return [];
+    return Array.from(new Set(horoscopeData.data[sign].slice(0, days).map(day => day.catFactParam)));
+  }, [horoscopeData, sign, days]);
+  
   const { data: catFactsMapping, isLoading: isCatLoading } =
     useGetAllCatFactsQuery(uniqueScores, { skip: uniqueScores.length === 0 })
   const currentCatFact = dayData[selectedIndex]
@@ -70,15 +73,15 @@ const HomePage: React.FC = () => {
 
   const handleToggleDays = useCallback((newDays: number) => {
     dispatch(setDays(newDays))
-  }, [dispatch])
+  }, [])
 
   const handleSignSelect = useCallback((newSign: string) => {
     dispatch(setSign(newSign))
-  }, [dispatch])
+  }, [])
 
   const handleTabSelect = useCallback((index: number) => {
     dispatch(setSelectedIndex(index))
-  }, [dispatch])
+  }, [])
 
   if (status !== 'succeeded') {
     return (
