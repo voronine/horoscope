@@ -17,69 +17,68 @@ import { setDays } from '@/store/slices/daysPeriodSlice'
 import { setSign, setSelectedIndex } from '@/store/slices/navigationSlice'
 
 const HomePage: React.FC = () => {
-  const searchParams = useSearchParams();
-  const initialSignFromURL = searchParams.get('sign') || 'Aries';
-  const initialDateFromURL = searchParams.get('date') || '';
+  const searchParams = useSearchParams()
+  const urlSign = searchParams.get('sign') || 'Aries'
+  const urlDate = searchParams.get('date') || ''
 
-  const dispatch = useAppDispatch();
-  const router = useRouter();
+  const dispatch = useAppDispatch()
+  const router = useRouter()
 
-  const horoscopeData = useAppSelector((state: RootState) => state.horoscope.data);
-  const status = useAppSelector((state: RootState) => state.horoscope.status);
-  const days = useAppSelector((state: RootState) => state.daysPeriod.days);
-  const sign = useAppSelector((state: RootState) => state.navigation.sign);
-  const selectedIndex = useAppSelector((state: RootState) => state.navigation.selectedIndex);
+  const horoscopeData = useAppSelector((state: RootState) => state.horoscope.data)
+  const status = useAppSelector((state: RootState) => state.horoscope.status)
+  const days = useAppSelector((state: RootState) => state.daysPeriod.days)
+  const { sign, selectedIndex, initialized } = useAppSelector((state: RootState) => state.navigation)
 
   useEffect(() => {
-    if (initialSignFromURL !== sign) {
-      dispatch(setSign(initialSignFromURL));
+    if (!initialized) {
+      dispatch(setSign(urlSign))
     }
-  }, [initialSignFromURL, sign, dispatch]);
+  }, [initialized, urlSign, dispatch])
 
   useEffect(() => {
     if (status === 'idle') {
-      dispatch(initializeHoroscopeData());
+      dispatch(initializeHoroscopeData())
     }
-  }, [status, dispatch]);
+  }, [status, dispatch])
 
   const dayData = useMemo(() => {
-    return horoscopeData ? horoscopeData.data[sign].slice(0, days) : [];
-  }, [horoscopeData, sign, days]);
+    return horoscopeData ? horoscopeData.data[sign].slice(0, days) : []
+  }, [horoscopeData, sign, days])
 
   useEffect(() => {
-    if (initialDateFromURL && dayData.length > 0) {
-      const idx = dayData.findIndex(day => day.date === initialDateFromURL);
-      if (idx !== -1) {
-        dispatch(setSelectedIndex(idx));
+    if (urlDate && dayData.length > 0) {
+      const index = dayData.findIndex(day => day.date === urlDate)
+      if (index !== -1) {
+        dispatch(setSelectedIndex(index))
       }
     }
-  }, [initialDateFromURL, dayData, dispatch]);
+  }, [urlDate, dayData, dispatch])
 
-  const uniqueScores = useMemo(() => getUniqueCatFactScores(horoscopeData), [horoscopeData]);
+  const uniqueScores = useMemo(() => getUniqueCatFactScores(horoscopeData), [horoscopeData])
   const { data: catFactsMapping, isLoading: isCatLoading } =
-    useGetAllCatFactsQuery(uniqueScores, { skip: uniqueScores.length === 0 });
+    useGetAllCatFactsQuery(uniqueScores, { skip: uniqueScores.length === 0 })
   const currentCatFact = dayData[selectedIndex]
     ? catFactsMapping?.[dayData[selectedIndex].catFactParam] || ''
-    : '';
+    : ''
 
   useEffect(() => {
     if (dayData[selectedIndex]) {
-      const newURL = `/horoscope/${sign}/${dayData[selectedIndex].date}`;
-      router.replace(newURL);
+      const newUrl = `/horoscope/${sign}/${dayData[selectedIndex].date}`
+      router.replace(newUrl)
     }
-  }, [sign, selectedIndex, dayData, router]);
+  }, [sign, selectedIndex, dayData, router])
 
   const handleToggleDays = useCallback((newDays: number) => {
-    dispatch(setDays(newDays));
-  }, [dispatch]);
+    dispatch(setDays(newDays))
+  }, [dispatch])
 
   const handleSignSelect = useCallback((newSign: string) => {
-    dispatch(setSign(newSign));
-  }, [dispatch]);
+    dispatch(setSign(newSign))
+  }, [dispatch])
 
   const handleTabSelect = useCallback((index: number) => {
-    dispatch(setSelectedIndex(index));
-  }, [dispatch]);
+    dispatch(setSelectedIndex(index))
+  }, [dispatch])
 
   if (status !== 'succeeded') {
     return (
@@ -95,7 +94,7 @@ const HomePage: React.FC = () => {
           <CircularProgress />
         </div>
       </main>
-    );
+    )
   }
 
   return (
@@ -120,7 +119,7 @@ const HomePage: React.FC = () => {
         catFact={currentCatFact}
       />
     </main>
-  );
-};
+  )
+}
 
-export default HomePage;
+export default HomePage
