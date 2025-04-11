@@ -82,18 +82,9 @@ const HomePage: React.FC = () => {
 
   if (status !== 'succeeded') {
     return (
-      <main className={styles.wrapper}>
-        <header className={styles.header}>
-          <ZodiacLogo sign={sign} />
-          <div className={styles.selectorToggle}>
-            <ZodiacSelector value={sign} onSelect={handleSignSelect} />
-            <ThemeToggle />
-          </div>
-        </header>
-        <div className={styles.spiner}>
+      <div className={styles.spiner}>
           <CircularProgress />
-        </div>
-      </main>
+      </div>
     )
   }
 
