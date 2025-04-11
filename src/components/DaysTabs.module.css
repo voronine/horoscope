@@ -22,6 +22,8 @@
   display: flex;
   -webkit-overflow-scrolling: touch;
   white-space: nowrap;
+  scrollbar-width: thin;
+  scrollbar-color: black transparent;
 }
 
 .tab {
