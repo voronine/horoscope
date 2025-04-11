@@ -1,5 +1,4 @@
-'use client'
-import React, { useMemo, useCallback } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import Link from 'next/link'
 import { format, addDays } from 'date-fns'
 import { uk } from 'date-fns/locale'
@@ -30,44 +29,42 @@ const DayTabsContent: React.FC<DayTabsContentProps> = ({
   isLoading,
   catFact
 }) => {
-  const tabLabels: string[] = useMemo(() => {
-    return Array.from({ length: days }, (_, i) => {
-      const d = addDays(new Date(), i)
-      return (format as unknown as (
-        date: Date,
-        formatString: string,
-        options?: { locale: typeof uk }
-      ) => string)(d, 'EEEE dd MMMM', { locale: uk })
-    })
-  }, [days]);
+  const tabLabels: string[] = Array.from({ length: days }, (_, i) => {
+    const d = addDays(new Date(), i)
+    return (format as unknown as (
+      date: Date,
+      formatString: string,
+      options?: { locale: typeof uk }
+    ) => string)(d, 'EEEE dd MMMM', { locale: uk })
+  })
 
   const formatLabel = useCallback((label: string) => {
-    const parts = label.split(' ');
-    const dayOfWeek = parts[0];
-    const dayOfWeekCapitalized = dayOfWeek.charAt(0).toUpperCase() + dayOfWeek.slice(1);
-    const dayAndMonth = parts.slice(1).join(' ');
+    const parts = label.split(' ')
+    const dayOfWeek = parts[0]
+    const dayOfWeekCapitalized = dayOfWeek.charAt(0).toUpperCase() + dayOfWeek.slice(1)
+    const dayAndMonth = parts.slice(1).join(' ')
     return (
       <>
         {dayOfWeekCapitalized}
         <br />
         {dayAndMonth}
       </>
-    );
-  }, []);
+    )
+  }, [])
 
   const bestIndicator = useMemo(() => {
-    if (!daysData[selectedIndex]) return '';
-    const scores = daysData[selectedIndex].score;
-    let bestKey = '';
-    let bestValue = -Infinity;
+    if (!daysData[selectedIndex]) return ''
+    const scores = daysData[selectedIndex].score
+    let bestKey = ''
+    let bestValue = -Infinity
     Object.entries(scores).forEach(([key, value]) => {
       if (value > bestValue) {
-        bestValue = value;
-        bestKey = key;
+        bestValue = value
+        bestKey = key
       }
-    });
-    return bestKey;
-  }, [daysData, selectedIndex]);
+    })
+    return bestKey
+  }, [daysData, selectedIndex])
 
   return (
     <div>
@@ -116,14 +113,13 @@ const DayTabsContent: React.FC<DayTabsContentProps> = ({
             </div>
           </div>
           <div className={styles.fact}>
-            {daysData[selectedIndex].catFact ||
-              (isLoading ? 'Loading...' : catFact || '')}
+            {daysData[selectedIndex].catFact || (isLoading ? 'Loading...' : catFact || '')}
           </div>
           <CopyLinkButton />
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default DayTabsContent;
+export default DayTabsContent
