@@ -1,36 +1,123 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Технічна документація
 
-## Getting Started
+## 1. Огляд архітектури
 
-First, run the development server:
+**Next.js App Router** – використовується для динамічної маршрутизації сторінок. Сторінки мають динамічні сегменти (наприклад, `/horoscope/[sign]/[date]`), де кожен таб (день прогнозів) відповідає своїй унікальній посилці.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+**React та TypeScript** – основний стек для реалізації компонентів та строгої типізації.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+**Redux Toolkit з RTK Query** – управління глобальним станом (наприклад, вибраний знак, індекс вибраної вкладки, кількість днів) та здійснення API‑запитів.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+**CSS Modules** – для локального стилювання компонентів, включаючи адаптивне оформлення вкладок.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+**date-fns** – для обробки дат (форматування, додавання днів).
 
-## Learn More
+## 2. Компоненти
 
-To learn more about Next.js, take a look at the following resources:
+**HomePage (src/app/page.tsx)**  
+Призначення: Головна сторінка, що відповідає за ініціалізацію даних та синхронізацію стану з URL.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Основні функції:
+- Зчитує початкові параметри (`sign`, `date`) з URL за допомогою `useSearchParams`.
+- Ініціалізує дані гороскопу через Redux‑слайс (`horoscopeSlice`).
+- Використовує глобальний стан для:
+  - Вибраного знаку (через `navigationSlice`).
+  - Індексу вибраної вкладки.
+  - Кількості днів (через `daysPeriodSlice`).
+- Обчислює дані для вибраного знаку (`dayData`) та передає їх до компонента вкладок.
+- Оновлює URL через `router.replace` при зміні вибраного дня, щоб посилання завжди відображало поточний стан.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+**ZodiacSelector (src/components/ZodiacSelector.tsx)**  
+Призначення: Вибір знаку зодіаку.
 
-## Deploy on Vercel
+Особливості:
+- Контрольований компонент: отримує значення знаку та функцію-обробник (`onSelect`) через пропси.
+- При виборі нового знаку диспатчує дію Redux для оновлення глобального стану, забезпечуючи збереження вибраного знаку.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+**DaysPeriodToggle (src/components/DaysPeriodToggle.tsx)**  
+Призначення: Перемикання між кількістю днів (3 та 7).
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Особливості:
+- Контрольований компонент: отримує поточне значення (`days`) та функцію `onToggle`.
+- Значення днів зберігається в Redux (`daysPeriodSlice`), що зберігається при навігації між маршрутами.
+
+**ThemeToggle (src/components/ThemeToggle.tsx)**  
+Призначення: Перемикання теми (світла/темна).
+
+Особливості:
+- Використовує Redux (`themeSlice`) для зберігання вибраної теми.
+- Зберігає тему у `localStorage` для збереження між сесіями.
+
+**DayTabsContent (src/components/DayTabsContent.tsx)**  
+Призначення: Відображення вкладок з прогнозами на вибрані дні.
+
+Особливості:
+- Кожен таб відповідає конкретному дню та має свою унікальну посилку виду `/horoscope/${sign}/${day.date}`. При кліку по вкладці відбувається перехід до відповідного URL.
+- Вкладки будуються динамічно на основі даних, згенерованих функцією `generateHoroscopeData()` з утиліти.
+- Стан вибраної вкладки (`selectedIndex`) зберігається у Redux (через `navigationSlice`) та синхронізується з URL, що дозволяє зберегти вибраний стан навіть при перезавантаженні сторінки.
+- Для візуалізації використовується форматування дати за допомогою `date-fns` та іконки з бібліотеки `Lucide`.
+
+**MoodImage (src/components/MoodImage.tsx)**  
+Призначення: Відображення великої іконки, що відповідає найкращому з показників (health, relationship, career).
+
+Особливості:
+- Приймає проп `indicator` і на основі його значення повертає відповідний компонент-іконку.
+
+**CopyLinkButton (src/components/CopyLinkButton.tsx)**  
+Призначення: Копіювання посилання поточної сторінки у буфер обміну.
+
+Особливості:
+- Використовує API `clipboard` для копіювання URL та відображає кнопку з використанням стилів Material UI.
+
+## 3. Утиліти
+
+**horoscope.ts (src/utils/horoscope.ts)**
+
+Визначення типів:
+- `Score`, `DayData`, `HoroscopeData` — єдиний тип `DayData`, що використовується по всьому проекту.
+
+Функції:
+- `generateScore(date, zodiacSign)` – обчислює оцінку для дня та знаку.
+- `generateHoroscopeData()` – генерує прогнози для кожного знаку зодіаку на 7 днів уперед.
+- `getUniqueCatFactScores(horoscopeData)` – збирає унікальні оцінки для інтеграції з API `catfact.ninja`.
+- `zodiacSigns` – один масив з назвами знаків зодіаку, що використовується для генерації даних.
+
+## 4. Глобальний стан (Redux)
+
+- **horoscopeSlice**: зберігає дані гороскопу (згенеровані функцією `generateHoroscopeData`) та статус завантаження.
+- **daysPeriodSlice**: зберігає вибрану кількість днів (3 або 7).
+- **navigationSlice**: зберігає вибраний знак (`sign`) та вибраний індекс вкладки (`selectedIndex`).
+- **themeSlice**: зберігає вибрану тему.
+
+Глобальний стан дозволяє:
+- Зберігати користувацькі налаштування між переходами.
+- Оновлювати URL без скидання локального стану.
+- Забезпечувати консистентність стану при перезавантаженнях.
+
+## 5. Маршрутизація та URL
+
+**Динамічний маршрут:**
+- Сторінка `/horoscope/[sign]/[date]/page.tsx` просто рендерить `HomePage`, а всередині `HomePage` параметри зчитуються за допомогою `useSearchParams`.
+
+**Унікальні посилання:**
+- Кожен таб має унікальний URL, який генерується у `DayTabsContent`: `/horoscope/${sign}/${day.date}`. Це дозволяє обмінюватися посиланнями та отримувати конкретний прогноз для заданого знаку та дня.
+
+**Синхронізація стану з URL:**
+- При зміні стану (знаку або вибраної вкладки) URL оновлюється через `router.replace`. Це допомагає синхронізувати глобальний стан з адресним рядком, гарантуючи коректність навігації.
+
+## 6. Адаптивність та стилі
+
+**CSS Modules:**
+- Стилі для вкладок, картки та інших компонентів організовані в CSS‑модулях.
+
+**Адаптивне оформлення:**
+- Медія‑запити та сучасні CSS‑функції (наприклад, `clamp()`) використовуються для забезпечення адаптивності: вкладки зменшуються при зменшенні розміру екрану, але відступи залишаються, зберігаючи візуальну цілісність.
+
+## Висновок
+
+- Для кожного табу створюється унікальна посилання на основі вибраного знаку та дати.
+- Стан навігації зберігається в Redux (завдяки `navigationSlice` та `daysPeriodSlice`), що гарантує стабільне відображення вибраного знаку та вкладки незалежно від оновлень URL.
+- Головна сторінка зчитує URL за допомогою `useSearchParams`, а при зміні стану оновлює URL через `router.replace`.
+- Адаптивність забезпечується використанням медія‑запитів та CSS‑функцій, що дозволяє зберегти задані відступи та padding при зміні розміру екрану.
+
+Ця технічна документація описує компоненти, глобальний стан, маршрутизацію та відображення, що забезпечує стабільну та передбачувану роботу вебсайту як у локальному середовищі, так і у продакшені.
