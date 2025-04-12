@@ -7,7 +7,7 @@
   }
 }
 
-.animate svg {
+.animate {
   animation: spin360 1s ease-in-out;
 }
 
@@ -93,6 +93,7 @@
 .tabValue {
   display: flex;
   gap: 4px;
+  align-items: center;
 }
 
 .mainBlock {
@@ -111,7 +112,13 @@
   font-style: italic;
   margin-bottom: 10px;
   height: 70px;
-  font-size: 14px;
+  font-size: 12px;
+}
+
+.scoresPart {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 @media (max-width: 1024px) {
@@ -168,8 +175,4 @@
   .tab {
     padding: 6px 1px;
   }
-}
-
-.fact {
-  font-size: 12px;
 }

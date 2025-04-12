@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import Link from 'next/link'
 import { format, addDays } from 'date-fns'
 import { uk } from 'date-fns/locale'
@@ -29,11 +29,6 @@ const DayTabsContent: React.FC<DayTabsContentProps> = ({
   isLoading,
   catFact
 }) => {
-  const [isMounted, setIsMounted] = useState(false)
-  useEffect(() => {
-    setIsMounted(true)
-  }, [])
-
   const tabLabels: string[] = Array.from({ length: days }, (_, i) => {
     const d = addDays(new Date(), i)
     return (format as unknown as (
@@ -82,11 +77,7 @@ const DayTabsContent: React.FC<DayTabsContentProps> = ({
           <Link
             key={label}
             href={`/horoscope/${sign}/${daysData[i].date}`}
-            className={
-              i === selectedIndex
-                ? `${styles.active} ${isMounted ? styles.animate : ''}`
-                : styles.tab
-            }
+            className={i === selectedIndex ? styles.active : styles.tab}
             onClick={() => onTabSelect(i)}
           >
             <div className={styles.spanDay}>{formatLabel(label)}</div>
@@ -108,22 +99,23 @@ const DayTabsContent: React.FC<DayTabsContentProps> = ({
         ))}
       </div>
       {daysData[selectedIndex] && (
-        <div
-          className={`${styles.card} ${styles.merged} ${isMounted ? styles.animate : ''}`}
-        >
+        <div className={`${styles.card} ${styles.merged}`}>
           <div className={styles.mainBlock}>
             <div className={styles.header}>
               <MoodImage indicator={bestIndicator} />
             </div>
             <div className={styles.scores}>
-              <div>
-                <Triangle size={12} /> Relationship: {formatScore(daysData[selectedIndex].score.relationship)}
+              <div className={styles.scoresPart}>
+                <Triangle size={12} className={styles.animate} />
+                <div> Відносини: {formatScore(daysData[selectedIndex].score.relationship)} </div>
               </div>
-              <div>
-                <Diamond size={12} /> Career: {formatScore(daysData[selectedIndex].score.career)}
+              <div className={styles.scoresPart}>
+                <Diamond size={12} className={styles.animate} />
+                <div> Кар&apos;єра: {formatScore(daysData[selectedIndex].score.career)} </div>
               </div>
-              <div>
-                <Heart size={12} /> Health: {formatScore(daysData[selectedIndex].score.health)}
+              <div className={styles.scoresPart}>
+                <Heart size={12} className={styles.animate} />
+                <div> Здоров&apos;є: {formatScore(daysData[selectedIndex].score.health)} </div>
               </div>
             </div>
           </div>
