@@ -24,6 +24,7 @@
   white-space: nowrap;
   scrollbar-width: thin;
   scrollbar-color: black transparent;
+  margin-top: 10px;
 }
 
 .tab {

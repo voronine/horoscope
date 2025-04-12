@@ -14,8 +14,10 @@ import { useGetAllCatFactsQuery } from '@/api/apiSlice'
 import DayTabsContent from '@/components/DayTabsContent'
 import { setDays } from '@/store/slices/daysPeriodSlice'
 import { setSign, setSelectedIndex } from '@/store/slices/navigationSlice'
+import useUpdateStartDate from '@/utils/useUpdateStartDate'
 
 const HomePage: React.FC = () => {
+  useUpdateStartDate()
   const params = useParams()
   const urlSign =
     Array.isArray(params.sign) ? params.sign[0] : params.sign || 'Aries'
