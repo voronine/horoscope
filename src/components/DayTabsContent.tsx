@@ -53,7 +53,11 @@ const DayTabsContent: React.FC<DayTabsContentProps> = ({
   }, [])
 
   const formatScore = useCallback((score: number) => {
-    return score.toString().padStart(2, '\u00A0')
+    return (
+      <span style={{ display: 'inline-block', width: '2ch', textAlign: 'right' }}>
+        {score}
+      </span>
+    )
   }, [])
 
   const bestIndicator = useMemo(() => {
