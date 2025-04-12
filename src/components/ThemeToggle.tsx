@@ -1,5 +1,6 @@
 'use client'
 import React, { useEffect } from 'react'
+import Image from 'next/image'
 import { useAppDispatch, useAppSelector } from '@/store/hooks/hooks'
 import { setTheme, toggleTheme } from '@/store/slices/themeSlice'
 import styles from './ThemeToggle.module.css'
@@ -27,16 +28,18 @@ const ThemeToggle: React.FC = () => {
   return (
     <button onClick={onToggle} aria-label="Toggle Theme" className={styles.button}>
       {theme === 'light' ? (
-        <img
+        <Image
           src="https://img.icons8.com/ios-filled/50/ffffff/moon-symbol.png"
           alt="Switch to Dark Mode"
-          style={{ width: '24px', height: '24px' }}
+          width={24}
+          height={24}
         />
       ) : (
-        <img
+        <Image
           src="https://img.icons8.com/ios-filled/50/FFD700/sun.png"
           alt="Switch to Light Mode"
-          style={{ width: '24px', height: '24px' }}
+          width={24}
+          height={24}
         />
       )}
     </button>

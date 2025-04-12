@@ -46,7 +46,9 @@ const ZodiacSelector: React.FC<ZodiacSelectorProps> = ({ value, onSelect }) => {
           },
         }}
       >
-        <InputLabel id="zodiac-selector-label">Гороскоп</InputLabel>
+        <InputLabel id="zodiac-selector-label" sx={{ color: 'var(--text-color)' }}>
+          Знак зодіаку
+        </InputLabel>
         <Select
           labelId="zodiac-selector-label"
           id="zodiac-selector"

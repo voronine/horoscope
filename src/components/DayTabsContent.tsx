@@ -105,10 +105,10 @@ const DayTabsContent: React.FC<DayTabsContentProps> = ({
                 <Triangle size={12} /> Відносини: {daysData[selectedIndex].score.relationship}
               </div>
               <div>
-                <Diamond size={12} /> Кар'єра: {daysData[selectedIndex].score.career}
+                <Diamond size={12} /> Кар&apos;єра: {daysData[selectedIndex].score.career}
               </div>
               <div>
-                <Heart size={12} /> Здоров'я: {daysData[selectedIndex].score.health}
+                <Heart size={12} /> Здоров&apos;я: {daysData[selectedIndex].score.health}
               </div>
             </div>
           </div>

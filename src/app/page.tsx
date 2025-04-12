@@ -40,13 +40,13 @@ const HomePage: React.FC = () => {
     if (!initialized) {
       dispatch(setSign(urlSign))
     }
-  }, [initialized, urlSign])
+  }, [initialized, urlSign, dispatch])
 
   useEffect(() => {
     if (status === 'idle') {
       dispatch(initializeHoroscopeData())
     }
-  }, [status])
+  }, [status, dispatch])
 
   const dayData = useMemo(() => {
     return horoscopeData ? horoscopeData.data[sign].slice(0, days) : []
