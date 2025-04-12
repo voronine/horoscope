@@ -102,18 +102,18 @@ const DayTabsContent: React.FC<DayTabsContentProps> = ({
             </div>
             <div className={styles.scores}>
               <div>
-                <Triangle size={12} /> Relationship: {daysData[selectedIndex].score.relationship}
+                <Triangle size={12} /> Відносини: {daysData[selectedIndex].score.relationship}
               </div>
               <div>
-                <Diamond size={12} /> Career: {daysData[selectedIndex].score.career}
+                <Diamond size={12} /> Кар'єра: {daysData[selectedIndex].score.career}
               </div>
               <div>
-                <Heart size={12} /> Health: {daysData[selectedIndex].score.health}
+                <Heart size={12} /> Здоров'я: {daysData[selectedIndex].score.health}
               </div>
             </div>
           </div>
           <div className={styles.fact}>
-            {daysData[selectedIndex].catFact || (isLoading ? 'Loading...' : catFact || '')}
+            {daysData[selectedIndex].catFact || (isLoading ? 'Завантаження...' : catFact || '')}
           </div>
           <CopyLinkButton />
         </div>

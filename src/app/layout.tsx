@@ -7,7 +7,7 @@ const RootLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     <html lang="en">
       <body className="wrapper">
         <ProviderWrapper>
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<div>Завантаження...</div>}>
             {children}
           </Suspense>
         </ProviderWrapper>

@@ -21,10 +21,11 @@ const DaysPeriodToggle: React.FC<DaysPeriodToggleProps> = ({ days, onToggle }) =
         backgroundColor: 'var(--button-bg)',
         color: 'var(--text-color)',
         height: 20,
+        textTransform: 'none',
         '&:hover': { backgroundColor: 'var(--button-bg)' }
       }}
     >
-      {days === 3 ? '7 Days' : '3 Days'}
+      {days === 3 ? '7 днів' : '3 дні'}
     </Button>
   )
 }

@@ -7,6 +7,21 @@ import Select, { SelectChangeEvent } from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 import styles from './ZodiacSelector.module.css'
 
+const zodiacSignsMap: Record<string, string> = {
+  Aries: 'Овен',
+  Taurus: 'Телець',
+  Gemini: 'Близнюки',
+  Cancer: 'Рак',
+  Leo: 'Лев',
+  Virgo: 'Діва',
+  Libra: 'Терези',
+  Scorpio: 'Скорпіон',
+  Sagittarius: 'Стрілець',
+  Capricorn: 'Козеріг',
+  Aquarius: 'Водолій',
+  Pisces: 'Риби',
+}
+
 type ZodiacSelectorProps = {
   value: string
   onSelect: (sign: string) => void
@@ -31,13 +46,13 @@ const ZodiacSelector: React.FC<ZodiacSelectorProps> = ({ value, onSelect }) => {
           },
         }}
       >
-        <InputLabel id="zodiac-selector-label">Horoscope</InputLabel>
+        <InputLabel id="zodiac-selector-label">Гороскоп</InputLabel>
         <Select
           labelId="zodiac-selector-label"
           id="zodiac-selector"
           value={value}
           onChange={handleChange}
-          label="Horoscope"
+          label="horoscope"
           autoWidth={false}
           MenuProps={{
             PaperProps: {
@@ -67,7 +82,7 @@ const ZodiacSelector: React.FC<ZodiacSelectorProps> = ({ value, onSelect }) => {
         >
           {zodiacSigns.map((sign) => (
             <MenuItem key={sign} value={sign}>
-              {sign}
+              {zodiacSignsMap[sign]}
             </MenuItem>
           ))}
         </Select>

@@ -5,6 +5,22 @@ export interface CatFactResponse {
   fact: string
 }
 
+async function translateToUkrainian(text: string): Promise<string> {
+  try {
+    const encodedText = encodeURIComponent(text)
+    const url = `https://api.mymemory.translated.net/get?q=${encodedText}&langpair=en|uk`
+    const res = await fetch(url)
+    if (!res.ok) {
+      throw new Error('Translation error')
+    }
+    const data = await res.json()
+    return data.responseData.translatedText || text
+  } catch (error) {
+    console.error('Translation failed, returning original text:', error)
+    return text
+  }
+}
+
 export const apiSlice = createApi({
   reducerPath: 'apiSlice',
   baseQuery: fetchBaseQuery({ baseUrl: 'https://catfact.ninja/' }),
@@ -22,7 +38,8 @@ export const apiSlice = createApi({
               const result = await baseQuery(`fact?random=${score}`)
               if (result.error) throw result.error
               const data = result.data as CatFactResponse
-              return { score, fact: data.fact }
+              const translatedFact = await translateToUkrainian(data.fact)
+              return { score, fact: translatedFact }
             })
           )
           const mapping: Record<number, string> = {}
