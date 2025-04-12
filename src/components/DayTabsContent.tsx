@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react'
+import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import Link from 'next/link'
 import { format, addDays } from 'date-fns'
 import { uk } from 'date-fns/locale'
@@ -29,6 +29,11 @@ const DayTabsContent: React.FC<DayTabsContentProps> = ({
   isLoading,
   catFact
 }) => {
+  const [isMounted, setIsMounted] = useState(false)
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
   const tabLabels: string[] = Array.from({ length: days }, (_, i) => {
     const d = addDays(new Date(), i)
     return (format as unknown as (
@@ -77,7 +82,11 @@ const DayTabsContent: React.FC<DayTabsContentProps> = ({
           <Link
             key={label}
             href={`/horoscope/${sign}/${daysData[i].date}`}
-            className={i === selectedIndex ? styles.active : styles.tab}
+            className={
+              i === selectedIndex
+                ? `${styles.active} ${isMounted ? styles.animate : ''}`
+                : styles.tab
+            }
             onClick={() => onTabSelect(i)}
           >
             <div className={styles.spanDay}>{formatLabel(label)}</div>
@@ -99,7 +108,9 @@ const DayTabsContent: React.FC<DayTabsContentProps> = ({
         ))}
       </div>
       {daysData[selectedIndex] && (
-        <div className={`${styles.card} ${styles.merged}`}>
+        <div
+          className={`${styles.card} ${styles.merged} ${isMounted ? styles.animate : ''}`}
+        >
           <div className={styles.mainBlock}>
             <div className={styles.header}>
               <MoodImage indicator={bestIndicator} />

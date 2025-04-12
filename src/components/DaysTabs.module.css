@@ -7,8 +7,7 @@
   }
 }
 
-.active svg,
-.card svg {
+.animate svg {
   animation: spin360 1s ease-in-out;
 }
 
