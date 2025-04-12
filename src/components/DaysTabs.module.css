@@ -1,3 +1,17 @@
+@keyframes spin360 {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.active svg,
+.card svg {
+  animation: spin360 1s ease-in-out;
+}
+
 .card {
   background: var(--card-bg);
   border: 1px solid var(--card-border);
@@ -70,6 +84,7 @@
   margin-top: 10px;
   align-items: center;
   padding-bottom: 10px;
+  gap: 2px;
 }
 
 .spanDay {

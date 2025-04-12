@@ -52,6 +52,10 @@ const DayTabsContent: React.FC<DayTabsContentProps> = ({
     )
   }, [])
 
+  const formatScore = useCallback((score: number) => {
+    return score.toString().padStart(2, '\u00A0')
+  }, [])
+
   const bestIndicator = useMemo(() => {
     if (!daysData[selectedIndex]) return ''
     const scores = daysData[selectedIndex].score
@@ -80,15 +84,15 @@ const DayTabsContent: React.FC<DayTabsContentProps> = ({
             <div className={styles.block}>
               <div className={styles.tabValue}>
                 <Triangle size={12} />
-                {daysData[i]?.score.relationship}
+                {formatScore(daysData[i]?.score.relationship)}
               </div>
               <div className={styles.tabValue}>
                 <Diamond size={12} />
-                {daysData[i]?.score.career}
+                {formatScore(daysData[i]?.score.career)}
               </div>
               <div className={styles.tabValue}>
                 <Heart size={12} />
-                {daysData[i]?.score.health}
+                {formatScore(daysData[i]?.score.health)}
               </div>
             </div>
           </Link>
@@ -102,18 +106,18 @@ const DayTabsContent: React.FC<DayTabsContentProps> = ({
             </div>
             <div className={styles.scores}>
               <div>
-                <Triangle size={12} /> Відносини: {daysData[selectedIndex].score.relationship}
+                <Triangle size={12} /> Relationship: {formatScore(daysData[selectedIndex].score.relationship)}
               </div>
               <div>
-                <Diamond size={12} /> Кар&apos;єра: {daysData[selectedIndex].score.career}
+                <Diamond size={12} /> Career: {formatScore(daysData[selectedIndex].score.career)}
               </div>
               <div>
-                <Heart size={12} /> Здоров&apos;я: {daysData[selectedIndex].score.health}
+                <Heart size={12} /> Health: {formatScore(daysData[selectedIndex].score.health)}
               </div>
             </div>
           </div>
           <div className={styles.fact}>
-            {daysData[selectedIndex].catFact || (isLoading ? 'Завантаження...' : catFact || '')}
+            {daysData[selectedIndex].catFact || (isLoading ? 'Loading...' : catFact || '')}
           </div>
           <CopyLinkButton />
         </div>

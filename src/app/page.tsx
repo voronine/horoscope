@@ -88,6 +88,7 @@ const HomePage: React.FC = () => {
   const handleToggleDays = useCallback(
     (newDays: number) => {
       dispatch(setDays(newDays))
+      dispatch(setSelectedIndex(0))
     },
     [dispatch]
   )
